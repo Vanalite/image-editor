@@ -17,7 +17,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       // self.image = UIImage(named: "Image2")
+        self.image = UIImage(named: "Image2")
         self.setupUI()
         self.setupGesture()
     }
@@ -45,8 +45,6 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     func setupCropView() {
         self.cropView.frame = CGRect(x: 0, y: 0, width: self.scrollView.frame.size.width / 2, height: self.scrollView.frame.size.width / 2)
         self.cropView.backgroundColor = .clear
-//        self.cropView.layer.shadowColor = UIColor(white: 0.5, alpha: 0.3).cgColor
-//        self.cropView.layer.shadowOffset = CGSize(width: 1000, height: 1000)
         self.cropView.layer.borderWidth = 2
         self.cropView.layer.borderColor = UIColor.red.cgColor
             self.cropView.center = CGPoint(x: self.scrollView.frame.size.width / 2, y: self.scrollView.frame.size.height / 2)
@@ -110,12 +108,34 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func doneButtonTouched(_ sender: Any) {
+        self.cropImage()
+    }
+    
+    func cropImage() {
+        //Failed
+//        UIGraphicsBeginImageContext(self.cropView.frame.size)
+//        if let context = UIGraphicsGetCurrentContext() {
+//            self.cropView.layer.draw(in: context)
+//        }
+//        let screenShot = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//        self.imageView.image = screenShot;
+        
+        let croppedRect = self.cropView.convert(self.cropView.frame, to: self.imageView)
+        if let cgImage = self.imageView.image?.cgImage {
+            if let subImage = cgImage.cropping(to: croppedRect) {
+                let croppedImage = UIImage(cgImage: subImage)
+                self.imageView.image = croppedImage;
+            }
+        }
     }
     
     @IBAction func cropButtonTouched(_ sender: Any) {
+        self.cropImage()
     }
     
     @IBAction func resetButtonTouched(_ sender: Any) {
+        self.imageView.image = UIImage(named: "Image2")
     }
     
     @IBAction func cancelButtonTouched(_ sender: Any) {
