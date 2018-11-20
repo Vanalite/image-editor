@@ -11,8 +11,16 @@ import UIKit
 class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var scrollView: UIScrollView!
-    @objc public var image: UIImage!
-    let imageView = UIImageView()
+    @objc public var image: UIImage! {
+        didSet {
+            self.imageView.image = image
+            let width = image.size.width
+            let height = image.size.height
+            self.imageView.frame = CGRect(x: 0, y:0, width: width, height: height)
+            self.imageView.center = self.view.center;
+        }
+    }
+    let imageView = CroppableImageView()
     let cropView = UIView()
     
     override func viewDidLoad() {
@@ -31,15 +39,17 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.automaticallyAdjustsScrollViewInsets = false
         self.scrollView.delegate = self
         self.scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.scrollView.isUserInteractionEnabled = true
+        self.scrollView.isUserInteractionEnabled = false
         self.scrollView.maximumZoomScale = 2.0
+        self.scrollView.isHidden = true
         
-        self.imageView.frame = self.scrollView.bounds
-        self.imageView.autoresizingMask = UIViewAutoresizing(rawValue: 0xFF)  //Fill, stretch and scale
+//        self.imageView.frame = self.scrollView.bounds
+//        self.imageView.autoresizingMask = UIViewAutoresizing(rawValue: 0xFF)  //Fill, stretch and scale
         self.imageView.contentMode = .scaleAspectFit
-        self.scrollView.addSubview(self.imageView)
-        self.setupCropView()
-        self.setupGesture()
+        self.imageView.isUserInteractionEnabled = true
+        self.view.addSubview(self.imageView)
+        self.view.sendSubview(toBack: self.imageView)
+//        self.setupCropView()
     }
     
     func setupCropView() {
@@ -48,7 +58,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.cropView.layer.borderWidth = 2
         self.cropView.layer.borderColor = UIColor.red.cgColor
             self.cropView.center = CGPoint(x: self.scrollView.frame.size.width / 2, y: self.scrollView.frame.size.height / 2)
-            self.view.addSubview(self.cropView)
+            self.imageView.addSubview(self.cropView)
     }
     
     func setupGesture() {
@@ -121,13 +131,15 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
 //        UIGraphicsEndImageContext();
 //        self.imageView.image = screenShot;
         
-        let croppedRect = self.cropView.convert(self.cropView.frame, to: self.imageView)
-        if let cgImage = self.imageView.image?.cgImage {
-            if let subImage = cgImage.cropping(to: croppedRect) {
-                let croppedImage = UIImage(cgImage: subImage)
-                self.imageView.image = croppedImage;
-            }
-        }
+//        let croppedRect = self.cropView.convert(self.cropView.frame, to: self.imageView)
+//        if let cgImage = self.imageView.image?.cgImage {
+//            if let subImage = cgImage.cropping(to: croppedRect) {
+//                let croppedImage = UIImage(cgImage: subImage)
+//                self.imageView.image = croppedImage;
+//            }
+//        }
+        
+        self.imageView.cropImage()
     }
     
     @IBAction func cropButtonTouched(_ sender: Any) {
@@ -135,7 +147,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func resetButtonTouched(_ sender: Any) {
-        self.imageView.image = UIImage(named: "Image2")
+        self.image = UIImage(named: "Image2")
     }
     
     @IBAction func cancelButtonTouched(_ sender: Any) {
