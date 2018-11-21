@@ -16,7 +16,6 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     @objc public var image: UIImage! {
         didSet {
             self.imageView.image = image
-            self.calibrateImageView()
         }
     }
     var originalImage: UIImage?
@@ -59,20 +58,14 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     // MARK: User Interactions
     @IBAction func rotateButtonTouched(_ sender: Any) {
         self.imageView.rotate()
-        self.calibrateImageView()
     }
     
     @IBAction func doneButtonTouched(_ sender: Any) {
-        self.cropImage()
-    }
-    
-    func cropImage() {
         self.imageView.cropImage()
-        self.calibrateImageView()
     }
     
     @IBAction func cropButtonTouched(_ sender: Any) {
-        self.cropImage()
+        self.imageView.cropImage()
     }
     
     @IBAction func resetButtonTouched(_ sender: Any) {
@@ -88,22 +81,5 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
 extension BBMCropRotateImageViewController {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return self.imageView
-    }
-    
-    func calibrateImageView() {
-        guard let assignedImage = self.imageView.image else { return }
-        var width = assignedImage.size.width
-        var height = assignedImage.size.height
-        let viewSize = self.view.frame.size
-        let ratio = height / width
-        width = viewSize.width
-        height = width * ratio
-        if height > viewSize.height {
-            height = viewSize.height
-            width = height / ratio
-        }
-        
-        self.imageView.frame = CGRect(x: 0, y:0, width: width, height: height)
-        self.imageView.center = self.view.center;
     }
 }

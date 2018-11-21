@@ -24,6 +24,12 @@ class CroppableImageView: UIImageView {
     var changedEdge: UIRectEdge?
     var cropAction = CropFrameAction.None
     var validatingTouchingFrame: CGRect?
+    
+    override var image: UIImage? {
+        didSet {
+            self.calibrateView()
+        }
+    }
 
     init() {
         super.init(frame: .zero)
@@ -52,8 +58,8 @@ class CroppableImageView: UIImageView {
     }
     
     func resetCropViewFrame() {
-        let size = min(self.frame.size.width, self.frame.size.height)
-        self.cropView.frame = CGRect(x: 0, y: 0, width: size, height: size)
+        let size = self.frame.size
+        self.cropView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         self.cropView.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
     }
     
@@ -275,6 +281,8 @@ extension CroppableImageView {
                 self.image = croppedImage;
             }
         }
+        self.calibrateView()
+        self.resetState()
     }
     
     func resetState() {
@@ -286,6 +294,8 @@ extension CroppableImageView {
         let radians = atan2f(Float(self.transform.b), Float(self.transform.a))
         let newImage = self.rotateImage(image, angle:CGFloat(radians - .pi / 2))
         self.image = newImage
+        self.calibrateView()
+        self.resetState()
     }
     
     // MARK: Private Methods
@@ -311,5 +321,23 @@ extension CroppableImageView {
         }
         let result = UIImage(cgImage: cgImage)
         return result
+    }
+    
+    func calibrateView() {
+        guard let assignedImage = self.image,
+        let superView = self.superview else { return }
+        var width = assignedImage.size.width
+        var height = assignedImage.size.height
+        let viewSize = superView.frame.size
+        let ratio = height / width
+        width = viewSize.width
+        height = width * ratio
+        if height > viewSize.height {
+            height = viewSize.height
+            width = height / ratio
+        }
+        
+        self.frame = CGRect(x: 0, y:0, width: width, height: height)
+        self.center = superView.center;
     }
 }
