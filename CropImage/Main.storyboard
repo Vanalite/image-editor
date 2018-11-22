@@ -141,7 +141,7 @@
         <!--Free Hand Drawing View Controller-->
         <scene sceneID="P22-aE-eo2">
             <objects>
-                <viewController id="mAo-bM-o8u" customClass="BBMFreeHandDrawingViewController" customModule="CropImage" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController restorationIdentifier="FreeHandDrawingViewController" storyboardIdentifier="FreeHandDrawingViewController" id="mAo-bM-o8u" customClass="BBMFreeHandDrawingViewController" customModule="CropImage" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dG5-We-wfn"/>
                         <viewControllerLayoutGuide type="bottom" id="nYx-T8-Tn9"/>

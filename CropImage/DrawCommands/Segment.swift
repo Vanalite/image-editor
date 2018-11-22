@@ -27,6 +27,7 @@ import UIKit
 struct Segment {
     let a: CGPoint
     let b: CGPoint
+    let c: CGPoint
     let width: CGFloat
     
     var midPoint: CGPoint {

@@ -25,8 +25,7 @@ THE SOFTWARE.
 import UIKit
 
 struct LineDrawCommand : DrawCommand {
-    let current: Segment
-    let previous: Segment?
+    var points = [CGPoint]()
     
     let width: CGFloat
     let color: UIColor
@@ -36,8 +35,8 @@ struct LineDrawCommand : DrawCommand {
     func execute(canvas: Canvas) {
         self.configure(canvas: canvas)
 
-        if let _ = self.previous {
-            self.drawQuadraticCurve(canvas: canvas)
+        if self.points.count > 2 {
+            self.drawCurve(canvas: canvas)
         } else {
             self.drawLine(canvas: canvas)
         }
@@ -50,17 +49,14 @@ struct LineDrawCommand : DrawCommand {
     }
     
     private func drawLine(canvas: Canvas) {
-        canvas.context.move(to: self.current.a)
-        canvas.context.addLine(to: self.current.b)
+        canvas.context.move(to: self.points[self.points.count - 2])
+        canvas.context.addLine(to: self.points[self.points.count - 1])
         canvas.context.strokePath()
     }
     
-    private func drawQuadraticCurve(canvas: Canvas) {
-        if let previousMid = self.previous?.midPoint {
-            let currentMid = self.current.midPoint
-            canvas.context.move(to: previousMid)
-            canvas.context.addQuadCurve(to: current.a, control: currentMid)
-            canvas.context.strokePath()
-        }
+    private func drawCurve(canvas: Canvas) {
+        canvas.context.move(to: points[0])
+        canvas.context.addCurve(to: points[3], control1: points[1], control2: points[2])
+        canvas.context.strokePath()
     }
 }

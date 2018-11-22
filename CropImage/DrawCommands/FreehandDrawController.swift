@@ -10,7 +10,7 @@ import UIKit
 
 class FreehandDrawController : NSObject {
     var color: UIColor = .black
-    var width: CGFloat = 5.0
+    var width: CGFloat = 3.0
     
     required init(canvas: Canvas & DrawCommandReceiver, view: UIView) {
         self.canvas = canvas
@@ -48,7 +48,7 @@ class FreehandDrawController : NSObject {
         case .began:
             self.startAtPoint(point: point)
         case .changed:
-            self.continueAtPoint(point: point, velocity: sender.velocity(in: sender.view))
+            self.continueAtPoint(point: point)
         case .ended:
             self.endAtPoint(point: point)
         case .failed:
@@ -68,34 +68,34 @@ class FreehandDrawController : NSObject {
     // MARK: Draw commands
     
     private func startAtPoint(point: CGPoint) {
-        self.lastPoint = point
+        self.lastPoints[0] = point
+        self.countPoint = 0
         self.lineStrokeCommand = ComposedCommand(commands: [])
     }
     
-    private func continueAtPoint(point: CGPoint, velocity: CGPoint) {
-        let segmentWidth = modulatedWidth(width: self.width, velocity: velocity, previousVelocity: self.lastVelocity, previousWidth: self.width)
-        let segment = Segment(a: self.lastPoint, b: point, width: segmentWidth)
+    private func continueAtPoint(point: CGPoint) {
+        self.countPoint += 1
+        self.lastPoints[countPoint] = point
         
-        let lineCommand = LineDrawCommand(current: segment, previous: lastSegment, width: segmentWidth, color: self.color)
-        
-        self.canvas.executeCommands(commands: [lineCommand])
+        if self.countPoint == 4 {
 
-        self.lineStrokeCommand?.addCommand(command: lineCommand)
-        self.lastPoint = point
-        self.lastSegment = segment
-        self.lastVelocity = velocity
-        self.lastWidth = segmentWidth
+            self.lastPoints[3] = self.midPoint(a: self.lastPoints[2], b: self.lastPoints[4])
+            let lineCommand = LineDrawCommand(points: self.lastPoints, width: self.width, color: self.color)
+            self.canvas.executeCommands(commands: [lineCommand])
+            self.lineStrokeCommand?.addCommand(command: lineCommand)
+            
+            self.lastPoints[0] = self.lastPoints[3]
+            self.lastPoints[1] = self.lastPoints[4]
+            self.countPoint = 1
+        }
     }
     
     private func endAtPoint(point: CGPoint) {
+        self.continueAtPoint(point: point)
         if let lineStrokeCommand = self.lineStrokeCommand {
             self.commandQueue.append(lineStrokeCommand)
         }
-        
-        self.lastPoint = .zero
-        self.lastSegment = nil
-        self.lastVelocity = .zero
-        self.lastWidth = nil
+
         self.lineStrokeCommand = nil
     }
     
@@ -105,11 +105,14 @@ class FreehandDrawController : NSObject {
         self.commandQueue.append(circleCommand)
     }
     
+    private func midPoint(a: CGPoint, b: CGPoint) -> CGPoint {
+        return CGPoint(x: (a.x + b.x) / 2, y: (a.y + b.y) / 2)
+    }
+
+    
     private let canvas: Canvas & DrawCommandReceiver
     private var lineStrokeCommand: ComposedCommand?
     private var commandQueue: Array<DrawCommand> = []
-    private var lastPoint: CGPoint = .zero
-    private var lastSegment: Segment?
-    private var lastVelocity: CGPoint = .zero
-    private var lastWidth: CGFloat?
+    private var lastPoints = [CGPoint].init(repeating: .zero, count: 5)
+    private var countPoint = 0
 }
