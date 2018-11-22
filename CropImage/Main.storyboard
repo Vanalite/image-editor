@@ -22,7 +22,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aGT-fa-4Je" userLabel="Image Container View">
-                                <rect key="frame" x="10" y="10" width="355" height="647"/>
+                                <rect key="frame" x="10" y="10" width="355" height="567"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                             </view>
                             <scrollView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FND-nd-faX">
@@ -120,9 +120,9 @@
                             <constraint firstItem="aGT-fa-4Je" firstAttribute="leading" secondItem="Q2k-zY-832" secondAttribute="leading" constant="10" id="IIq-FV-DU0"/>
                             <constraint firstItem="aGT-fa-4Je" firstAttribute="top" secondItem="Q2k-zY-832" secondAttribute="top" constant="10" id="LjE-P4-eq6"/>
                             <constraint firstAttribute="trailing" secondItem="xhf-BX-Fa3" secondAttribute="trailing" id="NGg-X5-ZqU"/>
+                            <constraint firstItem="xhf-BX-Fa3" firstAttribute="top" secondItem="aGT-fa-4Je" secondAttribute="bottom" constant="10" id="Nst-H8-BQK"/>
                             <constraint firstAttribute="trailing" secondItem="aGT-fa-4Je" secondAttribute="trailing" constant="10" id="O4T-X7-yhu"/>
                             <constraint firstAttribute="trailing" secondItem="FND-nd-faX" secondAttribute="trailing" constant="10" id="QO6-kl-ieB"/>
-                            <constraint firstAttribute="bottom" secondItem="aGT-fa-4Je" secondAttribute="bottom" constant="10" id="XSI-Od-lR4"/>
                             <constraint firstItem="xhf-BX-Fa3" firstAttribute="leading" secondItem="Q2k-zY-832" secondAttribute="leading" id="dro-77-CWt"/>
                             <constraint firstItem="FND-nd-faX" firstAttribute="top" secondItem="Q2k-zY-832" secondAttribute="top" id="h7k-WW-myf"/>
                             <constraint firstItem="FND-nd-faX" firstAttribute="leading" secondItem="Q2k-zY-832" secondAttribute="leading" constant="10" id="nUk-fm-hBF"/>

@@ -78,9 +78,8 @@ class CroppableImageView: UIImageView {
         cornerView.backgroundColor = .clear
         cornerView.layer.addSublayer(layer)
         cornerView.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstraint = NSLayoutConstraint(item: cornerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20)
-        let widthConstraint = NSLayoutConstraint(item: cornerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20)
-        cornerView.addConstraints([heightConstraint, widthConstraint])
+        cornerView.heightAnchor.constraint(equalToConstant: kCornerSideLength).isActive = true
+        cornerView.widthAnchor.constraint(equalToConstant: kCornerSideLength).isActive = true
         return cornerView
     }
     
@@ -91,10 +90,9 @@ class CroppableImageView: UIImageView {
         path.addLine(to: CGPoint(x: kCornerSideLength, y: 0))
         let topLeftLayer = createShapeLayer(path: path)
         let topLeftView = createCornerView(layer: topLeftLayer)
-        var horizontalConstraint = NSLayoutConstraint(item: topLeftView, attribute: .leading, relatedBy: .equal, toItem: self.cropView, attribute: .leading, multiplier: 1, constant: -1)
-        var verticalConstraint = NSLayoutConstraint(item: topLeftView, attribute: .top, relatedBy: .equal, toItem: self.cropView, attribute: .top, multiplier: 1, constant: -1)
         self.cropView.addSubview(topLeftView)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint])
+        topLeftView.leadingAnchor.constraint(equalTo: self.cropView.leadingAnchor, constant: -1).isActive = true
+        topLeftView.topAnchor.constraint(equalTo: self.cropView.topAnchor, constant: -1).isActive = true
         
         path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: 0))
@@ -102,10 +100,9 @@ class CroppableImageView: UIImageView {
         path.addLine(to: CGPoint(x: kCornerSideLength, y: kCornerSideLength))
         let bottomLeftLayer = createShapeLayer(path: path)
         let bottomLeftView = createCornerView(layer: bottomLeftLayer)
-        horizontalConstraint = NSLayoutConstraint(item: bottomLeftView, attribute: .leading, relatedBy: .equal, toItem: self.cropView, attribute: .leading, multiplier: 1, constant: -1)
-        verticalConstraint = NSLayoutConstraint(item: bottomLeftView, attribute: .bottom, relatedBy: .equal, toItem: self.cropView, attribute: .bottom, multiplier: 1, constant: 1)
         self.cropView.addSubview(bottomLeftView)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint])
+        bottomLeftView.leadingAnchor.constraint(equalTo: self.cropView.leadingAnchor, constant: -1).isActive = true
+        bottomLeftView.bottomAnchor.constraint(equalTo: self.cropView.bottomAnchor, constant: 1).isActive = true
         
         path = UIBezierPath()
         path.move(to: CGPoint(x: kCornerSideLength, y: 0))
@@ -113,10 +110,9 @@ class CroppableImageView: UIImageView {
         path.addLine(to: CGPoint(x: 0, y: kCornerSideLength))
         let bottomRightLayer = createShapeLayer(path: path)
         let bottomRightView = createCornerView(layer: bottomRightLayer)
-        horizontalConstraint = NSLayoutConstraint(item: bottomRightView, attribute: .trailing, relatedBy: .equal, toItem: self.cropView, attribute: .trailing, multiplier: 1, constant: 1)
-        verticalConstraint = NSLayoutConstraint(item: bottomRightView, attribute: .bottom, relatedBy: .equal, toItem: self.cropView, attribute: .bottom, multiplier: 1, constant: 1)
         self.cropView.addSubview(bottomRightView)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint])
+        bottomRightView.trailingAnchor.constraint(equalTo: self.cropView.trailingAnchor, constant: 1).isActive = true
+        bottomRightView.bottomAnchor.constraint(equalTo: self.cropView.bottomAnchor, constant: 1).isActive = true
         
         path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: 0))
@@ -125,10 +121,9 @@ class CroppableImageView: UIImageView {
         
         let topRightLayer = createShapeLayer(path: path)
         let topRightView = createCornerView(layer: topRightLayer)
-        horizontalConstraint = NSLayoutConstraint(item: topRightView, attribute: .trailing, relatedBy: .equal, toItem: self.cropView, attribute: .trailing, multiplier: 1, constant: 1)
-        verticalConstraint = NSLayoutConstraint(item: topRightView, attribute: .top, relatedBy: .equal, toItem: self.cropView, attribute: .top, multiplier: 1, constant: -1)
         self.cropView.addSubview(topRightView)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint])
+        topRightView.trailingAnchor.constraint(equalTo: self.cropView.trailingAnchor, constant: 1).isActive = true
+        topRightView.topAnchor.constraint(equalTo: self.cropView.topAnchor, constant: -1).isActive = true
         
         self.cropView.layoutSubviews()
     }
@@ -162,34 +157,31 @@ class CroppableImageView: UIImageView {
         touchView.layer.borderWidth = 2
         self.cropView.addSubview(touchView)
         touchView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalConstraint = NSLayoutConstraint(item: touchView, attribute: .centerX, relatedBy: .equal, toItem: self.cropView, attribute: .centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: touchView, attribute: .centerY, relatedBy: .equal, toItem: self.cropView, attribute: .centerY, multiplier: 1, constant: 0)
-        let heightConstraint = NSLayoutConstraint(item: touchView, attribute: .height, relatedBy: .equal, toItem: self.cropView, attribute: .height, multiplier: 0.8, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: touchView, attribute: .width, relatedBy: .equal, toItem: self.cropView, attribute: .width, multiplier: 0.8, constant: 0)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint, heightConstraint, widthConstraint])
+        touchView.centerXAnchor.constraint(equalTo: self.cropView.centerXAnchor).isActive = true
+        touchView.centerYAnchor.constraint(equalTo: self.cropView.centerYAnchor).isActive = true
+        touchView.heightAnchor.constraint(equalTo: self.cropView.heightAnchor, multiplier: 0.8).isActive = true
+        touchView.widthAnchor.constraint(equalTo: self.cropView.widthAnchor, multiplier: 0.8).isActive = true
         self.cropView.layoutSubviews()
     }
     
     func setupGridView() {
-        verticalGridView.layer.borderColor = UIColor.white.cgColor
-        verticalGridView.layer.borderWidth = 1
-        self.cropView.addSubview(verticalGridView)
-        verticalGridView.translatesAutoresizingMaskIntoConstraints = false
-        var horizontalConstraint = NSLayoutConstraint(item: verticalGridView, attribute: .centerX, relatedBy: .equal, toItem: self.cropView, attribute: .centerX, multiplier: 1, constant: 0)
-        var verticalConstraint = NSLayoutConstraint(item: verticalGridView, attribute: .centerY, relatedBy: .equal, toItem: self.cropView, attribute: .centerY, multiplier: 1, constant: 0)
-        var heightConstraint = NSLayoutConstraint(item: verticalGridView, attribute: .height, relatedBy: .equal, toItem: self.cropView, attribute: .height, multiplier: 1, constant: 0)
-        var widthConstraint = NSLayoutConstraint(item: verticalGridView, attribute: .width, relatedBy: .equal, toItem: self.cropView, attribute: .width, multiplier: 1/3, constant: 0)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint, heightConstraint, widthConstraint])
+        self.verticalGridView.layer.borderColor = UIColor.white.cgColor
+        self.verticalGridView.layer.borderWidth = 1
+        self.cropView.addSubview(self.verticalGridView)
+        self.verticalGridView.translatesAutoresizingMaskIntoConstraints = false
+        self.verticalGridView.centerXAnchor.constraint(equalTo: self.cropView.centerXAnchor).isActive = true
+        self.verticalGridView.centerYAnchor.constraint(equalTo: self.cropView.centerYAnchor).isActive = true
+        self.verticalGridView.heightAnchor.constraint(equalTo: self.cropView.heightAnchor).isActive = true
+        self.verticalGridView.widthAnchor.constraint(equalTo: self.cropView.widthAnchor, multiplier: 1/3).isActive = true
         
-        horizontalGridView.layer.borderColor = UIColor.white.cgColor
-        horizontalGridView.layer.borderWidth = 1
-        self.cropView.addSubview(horizontalGridView)
-        horizontalGridView.translatesAutoresizingMaskIntoConstraints = false
-        horizontalConstraint = NSLayoutConstraint(item: horizontalGridView, attribute: .centerX, relatedBy: .equal, toItem: self.cropView, attribute: .centerX, multiplier: 1, constant: 0)
-        verticalConstraint = NSLayoutConstraint(item: horizontalGridView, attribute: .centerY, relatedBy: .equal, toItem: self.cropView, attribute: .centerY, multiplier: 1, constant: 0)
-        heightConstraint = NSLayoutConstraint(item: horizontalGridView, attribute: .height, relatedBy: .equal, toItem: self.cropView, attribute: .height, multiplier: 1/3, constant: 0)
-        widthConstraint = NSLayoutConstraint(item: horizontalGridView, attribute: .width, relatedBy: .equal, toItem: self.cropView, attribute: .width, multiplier: 1, constant: 0)
-        self.cropView.addConstraints([horizontalConstraint, verticalConstraint, heightConstraint, widthConstraint])
+        self.horizontalGridView.layer.borderColor = UIColor.white.cgColor
+        self.horizontalGridView.layer.borderWidth = 1
+        self.cropView.addSubview(self.horizontalGridView)
+        self.horizontalGridView.translatesAutoresizingMaskIntoConstraints = false
+        self.horizontalGridView.centerXAnchor.constraint(equalTo: self.cropView.centerXAnchor).isActive = true
+        self.horizontalGridView.centerYAnchor.constraint(equalTo: self.cropView.centerYAnchor).isActive = true
+        self.horizontalGridView.heightAnchor.constraint(equalTo: self.cropView.heightAnchor, multiplier: 1/3).isActive = true
+        self.horizontalGridView.widthAnchor.constraint(equalTo: self.cropView.widthAnchor).isActive = true
     }
     
     func showGridView() {
