@@ -16,6 +16,7 @@
 		0421923321A6A692002D2308 /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923221A6A692002D2308 /* Segment.swift */; };
 		0421923521A6A92E002D2308 /* FreehandDrawController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923421A6A92E002D2308 /* FreehandDrawController.swift */; };
 		0421923721A6AA6A002D2308 /* WidthModulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923621A6AA6A002D2308 /* WidthModulation.swift */; };
+		0421923E21A6CE09002D2308 /* ImagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923D21A6CE09002D2308 /* ImagePreviewViewController.swift */; };
 		04F07A4B21A3B90B00B79990 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F07A4A21A3B90B00B79990 /* AppDelegate.swift */; };
 		04F07A4D21A3B90B00B79990 /* BBMCropRotateImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */; };
 		04F07A5221A3B90D00B79990 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F07A5121A3B90D00B79990 /* Assets.xcassets */; };
@@ -35,6 +36,7 @@
 		0421923221A6A692002D2308 /* Segment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
 		0421923421A6A92E002D2308 /* FreehandDrawController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreehandDrawController.swift; sourceTree = "<group>"; };
 		0421923621A6AA6A002D2308 /* WidthModulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidthModulation.swift; sourceTree = "<group>"; };
+		0421923D21A6CE09002D2308 /* ImagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewViewController.swift; sourceTree = "<group>"; };
 		04F07A4721A3B90B00B79990 /* CropImage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CropImage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F07A4A21A3B90B00B79990 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBMCropRotateImageViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				04F07A6521A3D0A400B79990 /* CroppableImageView.swift */,
 				0421922521A69DC7002D2308 /* DrawableImageView.swift */,
 				0421922721A69E22002D2308 /* CalibratableProtocol.swift */,
+				0421923D21A6CE09002D2308 /* ImagePreviewViewController.swift */,
 			);
 			path = CropImage;
 			sourceTree = "<group>";
@@ -178,6 +181,7 @@
 			files = (
 				04F07A4D21A3B90B00B79990 /* BBMCropRotateImageViewController.swift in Sources */,
 				0421923121A6A5D9002D2308 /* ComposedCommand.swift in Sources */,
+				0421923E21A6CE09002D2308 /* ImagePreviewViewController.swift in Sources */,
 				0421922E21A6A5D9002D2308 /* CircleDrawCommand.swift in Sources */,
 				0421923021A6A5D9002D2308 /* DrawCommands.swift in Sources */,
 				0421922821A69E22002D2308 /* CalibratableProtocol.swift in Sources */,

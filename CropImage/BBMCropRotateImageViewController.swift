@@ -8,8 +8,6 @@
 
 import UIKit
 
-let imageName = "Image2"
-
 class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var imageContainerView: UIView!
@@ -24,10 +22,8 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.originalImage = UIImage(named: imageName)
+        self.originalImage = self.image
         // Changed in real app
-        self.image = UIImage(named: imageName)
-        
         self.setupUI()
     }
     
@@ -36,8 +32,8 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.imageView.image = self.image
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         self.imageView.resetState()
     }
     
@@ -77,6 +73,11 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     
     @IBAction func doneButtonTouched(_ sender: Any) {
         self.imageView.cropImage()
+        self.image = self.imageView.image
+        if let vc = self.navigationController?.viewControllers.first as? ImagePreviewViewController {
+            vc.image = self.image
+        }
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func cropButtonTouched(_ sender: Any) {

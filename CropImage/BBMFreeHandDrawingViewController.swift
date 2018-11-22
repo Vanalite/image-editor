@@ -28,9 +28,7 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.originalImage = UIImage(named: freeHandImageName)
-        // Changed in real app
-        self.image = UIImage(named: freeHandImageName)
+        self.originalImage = self.image
         self.setupUI()
         self.drawController = FreehandDrawController(canvas: self.imageView, view: self.imageView)
         self.drawController.color = self.colorArray.first!
@@ -39,10 +37,6 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.imageView.image = self.image
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
     }
     
     func setupUI() {
@@ -62,6 +56,11 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     }
     
     @IBAction func saveButtonTouched(_ sender: Any) {
+        self.image = self.imageView.image
+        if let vc = self.navigationController?.viewControllers.first as? ImagePreviewViewController {
+            vc.image = self.image
+        }
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
