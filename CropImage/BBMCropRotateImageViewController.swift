@@ -8,10 +8,11 @@
 
 import UIKit
 
-let imageName = "Image3"
+let imageName = "Image2"
 
 class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
-
+    
+    @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @objc public var image: UIImage! {
         didSet {
@@ -24,7 +25,9 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalImage = UIImage(named: imageName)
+        // Changed in real app
         self.image = UIImage(named: imageName)
+        
         self.setupUI()
     }
     
@@ -33,18 +36,30 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.imageView.image = self.image
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.imageView.resetState()
+    }
+    
     func setupUI() {
         self.automaticallyAdjustsScrollViewInsets = false
+        self.setupScrollView()
+        self.setupImageView()
+    }
+    
+    func setupScrollView() {
         self.scrollView.delegate = self
         self.scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.scrollView.isUserInteractionEnabled = false
         self.scrollView.maximumZoomScale = 2.0
         self.scrollView.isHidden = true
-        
+    }
+    
+    func setupImageView() {
         self.imageView.contentMode = .scaleAspectFit
         self.imageView.isUserInteractionEnabled = true
-        self.view.addSubview(self.imageView)
-        self.view.sendSubview(toBack: self.imageView)
+        self.imageContainerView.addSubview(self.imageView)
+        self.view.sendSubview(toBack: self.imageContainerView)
     }
     
     @objc func zoomImage() {
@@ -71,10 +86,12 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     @IBAction func resetButtonTouched(_ sender: Any) {
         self.image = self.originalImage
         self.imageView.resetState()
+        self.imageView.showGridView()
     }
     
     @IBAction func cancelButtonTouched(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
+        self.imageView.hideGridView()
     }
 }
 
