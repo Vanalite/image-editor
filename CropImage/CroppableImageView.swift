@@ -17,14 +17,13 @@ enum CropFrameAction : Int {
     case Resize = 2
 }
 
-class CroppableImageView: UIImageView {
+class CroppableImageView: UIImageView, Calibratable {
     private let cropView = UIView()
     private var firstTouchLocation: CGPoint?
     private var verticalGridView = UIView()
     private var horizontalGridView = UIView()
     private var darkLayer: CALayer?
     var defaultMinimumFrameSize: CGFloat = 50.0
-    var defaultCropFrame = CGRect(x: 0, y: 0, width: 100, height: 100)
     var changedEdge: UIRectEdge?
     var cropAction = CropFrameAction.None
     var validatingTouchingFrame: CGRect?
@@ -417,21 +416,21 @@ extension CroppableImageView {
         return result
     }
     
-    func calibrateView() {
-        guard let assignedImage = self.image,
-        let superView = self.superview else { return }
-        var width = assignedImage.size.width
-        var height = assignedImage.size.height
-        let viewSize = superView.frame.size
-        let ratio = height / width
-        width = viewSize.width
-        height = width * ratio
-        if height > viewSize.height {
-            height = viewSize.height
-            width = height / ratio
-        }
-        let x = viewSize.width / 2 - (width / 2)
-        let y = viewSize.height / 2 - (height / 2)
-        self.frame = CGRect(x: x, y: y, width: width, height: height)
-    }
+//    func calibrateView() {
+//        guard let assignedImage = self.image,
+//        let superView = self.superview else { return }
+//        var width = assignedImage.size.width
+//        var height = assignedImage.size.height
+//        let viewSize = superView.frame.size
+//        let ratio = height / width
+//        width = viewSize.width
+//        height = width * ratio
+//        if height > viewSize.height {
+//            height = viewSize.height
+//            width = height / ratio
+//        }
+//        let x = viewSize.width / 2 - (width / 2)
+//        let y = viewSize.height / 2 - (height / 2)
+//        self.frame = CGRect(x: x, y: y, width: width, height: height)
+//    }
 }

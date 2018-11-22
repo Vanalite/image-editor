@@ -7,15 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0421922621A69DC7002D2308 /* DrawableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421922521A69DC7002D2308 /* DrawableImageView.swift */; };
+		0421922821A69E22002D2308 /* CalibratableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421922721A69E22002D2308 /* CalibratableProtocol.swift */; };
+		0421922E21A6A5D9002D2308 /* CircleDrawCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421922A21A6A5D8002D2308 /* CircleDrawCommand.swift */; };
+		0421922F21A6A5D9002D2308 /* LineDrawCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421922B21A6A5D8002D2308 /* LineDrawCommand.swift */; };
+		0421923021A6A5D9002D2308 /* DrawCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421922C21A6A5D9002D2308 /* DrawCommands.swift */; };
+		0421923121A6A5D9002D2308 /* ComposedCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421922D21A6A5D9002D2308 /* ComposedCommand.swift */; };
+		0421923321A6A692002D2308 /* Segment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923221A6A692002D2308 /* Segment.swift */; };
+		0421923521A6A92E002D2308 /* FreehandDrawController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923421A6A92E002D2308 /* FreehandDrawController.swift */; };
+		0421923721A6AA6A002D2308 /* WidthModulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0421923621A6AA6A002D2308 /* WidthModulation.swift */; };
 		04F07A4B21A3B90B00B79990 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F07A4A21A3B90B00B79990 /* AppDelegate.swift */; };
 		04F07A4D21A3B90B00B79990 /* BBMCropRotateImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */; };
 		04F07A5221A3B90D00B79990 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04F07A5121A3B90D00B79990 /* Assets.xcassets */; };
 		04F07A5521A3B90D00B79990 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F07A5321A3B90D00B79990 /* LaunchScreen.storyboard */; };
 		04F07A5F21A3BC5700B79990 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04F07A5E21A3BC5700B79990 /* Main.storyboard */; };
 		04F07A6621A3D0A400B79990 /* CroppableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F07A6521A3D0A400B79990 /* CroppableImageView.swift */; };
+		04F07A6A21A671DD00B79990 /* BBMFreeHandDrawingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F07A6921A671DD00B79990 /* BBMFreeHandDrawingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0421922521A69DC7002D2308 /* DrawableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableImageView.swift; sourceTree = "<group>"; };
+		0421922721A69E22002D2308 /* CalibratableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibratableProtocol.swift; sourceTree = "<group>"; };
+		0421922A21A6A5D8002D2308 /* CircleDrawCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleDrawCommand.swift; sourceTree = "<group>"; };
+		0421922B21A6A5D8002D2308 /* LineDrawCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineDrawCommand.swift; sourceTree = "<group>"; };
+		0421922C21A6A5D9002D2308 /* DrawCommands.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawCommands.swift; sourceTree = "<group>"; };
+		0421922D21A6A5D9002D2308 /* ComposedCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposedCommand.swift; sourceTree = "<group>"; };
+		0421923221A6A692002D2308 /* Segment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Segment.swift; sourceTree = "<group>"; };
+		0421923421A6A92E002D2308 /* FreehandDrawController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreehandDrawController.swift; sourceTree = "<group>"; };
+		0421923621A6AA6A002D2308 /* WidthModulation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WidthModulation.swift; sourceTree = "<group>"; };
 		04F07A4721A3B90B00B79990 /* CropImage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CropImage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04F07A4A21A3B90B00B79990 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBMCropRotateImageViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +43,7 @@
 		04F07A5621A3B90D00B79990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04F07A5E21A3BC5700B79990 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		04F07A6521A3D0A400B79990 /* CroppableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CroppableImageView.swift; sourceTree = "<group>"; };
+		04F07A6921A671DD00B79990 /* BBMFreeHandDrawingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBMFreeHandDrawingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +57,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0421922921A6A5C8002D2308 /* DrawCommands */ = {
+			isa = PBXGroup;
+			children = (
+				0421922A21A6A5D8002D2308 /* CircleDrawCommand.swift */,
+				0421922D21A6A5D9002D2308 /* ComposedCommand.swift */,
+				0421922C21A6A5D9002D2308 /* DrawCommands.swift */,
+				0421922B21A6A5D8002D2308 /* LineDrawCommand.swift */,
+				0421923221A6A692002D2308 /* Segment.swift */,
+				0421923421A6A92E002D2308 /* FreehandDrawController.swift */,
+				0421923621A6AA6A002D2308 /* WidthModulation.swift */,
+			);
+			path = DrawCommands;
+			sourceTree = "<group>";
+		};
 		04F07A3E21A3B90B00B79990 = {
 			isa = PBXGroup;
 			children = (
@@ -56,13 +90,17 @@
 		04F07A4921A3B90B00B79990 /* CropImage */ = {
 			isa = PBXGroup;
 			children = (
+				0421922921A6A5C8002D2308 /* DrawCommands */,
 				04F07A4A21A3B90B00B79990 /* AppDelegate.swift */,
 				04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */,
+				04F07A6921A671DD00B79990 /* BBMFreeHandDrawingViewController.swift */,
 				04F07A5121A3B90D00B79990 /* Assets.xcassets */,
 				04F07A5321A3B90D00B79990 /* LaunchScreen.storyboard */,
 				04F07A5621A3B90D00B79990 /* Info.plist */,
 				04F07A5E21A3BC5700B79990 /* Main.storyboard */,
 				04F07A6521A3D0A400B79990 /* CroppableImageView.swift */,
+				0421922521A69DC7002D2308 /* DrawableImageView.swift */,
+				0421922721A69E22002D2308 /* CalibratableProtocol.swift */,
 			);
 			path = CropImage;
 			sourceTree = "<group>";
@@ -139,8 +177,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				04F07A4D21A3B90B00B79990 /* BBMCropRotateImageViewController.swift in Sources */,
+				0421923121A6A5D9002D2308 /* ComposedCommand.swift in Sources */,
+				0421922E21A6A5D9002D2308 /* CircleDrawCommand.swift in Sources */,
+				0421923021A6A5D9002D2308 /* DrawCommands.swift in Sources */,
+				0421922821A69E22002D2308 /* CalibratableProtocol.swift in Sources */,
+				0421923321A6A692002D2308 /* Segment.swift in Sources */,
 				04F07A6621A3D0A400B79990 /* CroppableImageView.swift in Sources */,
+				04F07A6A21A671DD00B79990 /* BBMFreeHandDrawingViewController.swift in Sources */,
+				0421922F21A6A5D9002D2308 /* LineDrawCommand.swift in Sources */,
 				04F07A4B21A3B90B00B79990 /* AppDelegate.swift in Sources */,
+				0421923521A6A92E002D2308 /* FreehandDrawController.swift in Sources */,
+				0421922621A69DC7002D2308 /* DrawableImageView.swift in Sources */,
+				0421923721A6AA6A002D2308 /* WidthModulation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
