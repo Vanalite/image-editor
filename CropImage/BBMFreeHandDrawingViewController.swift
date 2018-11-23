@@ -14,6 +14,7 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var selectedColorButton: UIButton!
     @IBOutlet weak var brushWidthSlider: VerticalSlider!
+    @IBOutlet weak var bottomView: UIView!
     
     @objc public var image: UIImage! {
         didSet {
@@ -25,6 +26,16 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     let imageView = DrawableImageView()
     private var drawController: FreehandDrawController!
     let colorArray: [UIColor] = [.white, .black, .red, .blue, .green, .yellow, .cyan, .magenta, .orange, .purple, .brown]
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+         self.hideControls()
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        self.showControls()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +49,20 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.imageView.image = self.image
+    }
+    
+    fileprivate func showControls() {
+        UIView.animate(withDuration: 0.5) {
+            self.bottomView.layer.opacity = 1
+            self.brushWidthSlider.layer.opacity = 1
+        }
+    }
+    
+    fileprivate func hideControls() {
+        UIView.animate(withDuration: 0.5) {
+            self.bottomView.layer.opacity = 0
+            self.brushWidthSlider.layer.opacity = 0
+        }
     }
     
     fileprivate func setupUI() {

@@ -364,6 +364,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bottomView" destination="FgB-Mj-vtt" id="PlN-xL-iYh"/>
                         <outlet property="brushWidthSlider" destination="rOT-zt-Hv8" id="wFy-s5-px3"/>
                         <outlet property="colorPickerCollectionView" destination="gPT-jm-1Gz" id="3US-Nf-Yz5"/>
                         <outlet property="imageContainerView" destination="zd3-mN-LhO" id="uPg-z8-FXd"/>

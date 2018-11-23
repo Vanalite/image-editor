@@ -35,10 +35,12 @@ class FreehandDrawController : NSObject {
         // Pan gesture recognizer to track lines
         
         let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.handlePan(sender:)))
+        panRecognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(panRecognizer)
         
         // Tap gesture recognizer to track points
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(sender:)))
+        tapRecognizer.cancelsTouchesInView = false
         view.addGestureRecognizer(tapRecognizer)
     }
     
@@ -83,6 +85,11 @@ class FreehandDrawController : NSObject {
         self.countPoint += 1
         self.lastPoints[countPoint] = point
         switch self.countPoint {
+        case 1:
+            let smallListArray = [self.lastPoints[0], self.lastPoints[1]]
+            let lineCommand = LineDrawCommand(points: smallListArray, width: self.width, color: self.color)
+            self.canvas.executeCommands(commands: [lineCommand])
+            self.lineStrokeCommand?.addCommand(command: lineCommand)
         case 2:
             self.countPoint += 1
             self.lastPoints[countPoint] = point
