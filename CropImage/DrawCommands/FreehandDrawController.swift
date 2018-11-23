@@ -76,9 +76,40 @@ class FreehandDrawController : NSObject {
     private func continueAtPoint(point: CGPoint) {
         self.countPoint += 1
         self.lastPoints[countPoint] = point
-        
-        if self.countPoint == 4 {
+        self.freeDraw(point: point)
+    }
+    
+    private func endAtPoint(point: CGPoint) {
+        self.countPoint += 1
+        self.lastPoints[countPoint] = point
+        switch self.countPoint {
+        case 2:
+            self.countPoint += 1
+            self.lastPoints[countPoint] = point
+            fallthrough
+        case 3:
+            let smallListArray = [self.lastPoints[0], self.lastPoints[1], self.lastPoints[2]]
+            let lineCommand = LineDrawCommand(points: smallListArray, width: self.width, color: self.color)
+            self.canvas.executeCommands(commands: [lineCommand])
+            self.lineStrokeCommand?.addCommand(command: lineCommand)
+            
+            self.lastPoints[0] = self.lastPoints[3]
+            self.lastPoints[1] = self.lastPoints[4]
+            self.countPoint = 1
+        case 4:
+            self.freeDraw(point: point)
+        default:
+            break;
+        }
+        if let lineStrokeCommand = self.lineStrokeCommand {
+            self.commandQueue.append(lineStrokeCommand)
+        }
 
+        self.lineStrokeCommand = nil
+    }
+    
+    private func freeDraw(point: CGPoint) {
+        if self.countPoint == 4 {
             self.lastPoints[3] = self.midPoint(a: self.lastPoints[2], b: self.lastPoints[4])
             let lineCommand = LineDrawCommand(points: self.lastPoints, width: self.width, color: self.color)
             self.canvas.executeCommands(commands: [lineCommand])
@@ -88,15 +119,6 @@ class FreehandDrawController : NSObject {
             self.lastPoints[1] = self.lastPoints[4]
             self.countPoint = 1
         }
-    }
-    
-    private func endAtPoint(point: CGPoint) {
-        self.continueAtPoint(point: point)
-        if let lineStrokeCommand = self.lineStrokeCommand {
-            self.commandQueue.append(lineStrokeCommand)
-        }
-
-        self.lineStrokeCommand = nil
     }
     
     private func tapAtPoint(point: CGPoint) {

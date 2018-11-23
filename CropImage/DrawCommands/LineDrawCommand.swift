@@ -35,7 +35,9 @@ struct LineDrawCommand : DrawCommand {
     func execute(canvas: Canvas) {
         self.configure(canvas: canvas)
 
-        if self.points.count > 2 {
+        if self.points.count == 3 {
+            self.drawQuadCurve(canvas: canvas)
+        } else if self.points.count >= 3 {
             self.drawCurve(canvas: canvas)
         } else {
             self.drawLine(canvas: canvas)
@@ -57,6 +59,12 @@ struct LineDrawCommand : DrawCommand {
     private func drawCurve(canvas: Canvas) {
         canvas.context.move(to: points[0])
         canvas.context.addCurve(to: points[3], control1: points[1], control2: points[2])
+        canvas.context.strokePath()
+    }
+    
+    private func drawQuadCurve(canvas: Canvas) {
+        canvas.context.move(to: points[0])
+        canvas.context.addQuadCurve(to: points[2], control: points[1])
         canvas.context.strokePath()
     }
 }

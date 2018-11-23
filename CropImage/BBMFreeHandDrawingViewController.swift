@@ -14,7 +14,8 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     
     @IBOutlet weak var colorPickerCollectionView: UICollectionView!
     @IBOutlet weak var imageContainerView: UIView!
-
+    @IBOutlet weak var selectedColorButton: UIButton!
+    
     @objc public var image: UIImage! {
         didSet {
             self.imageView.image = image
@@ -32,6 +33,7 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
         self.setupUI()
         self.drawController = FreehandDrawController(canvas: self.imageView, view: self.imageView)
         self.drawController.color = self.colorArray.first!
+        self.selectedColorButton.backgroundColor = self.drawController.color
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +43,8 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     
     func setupUI() {
         self.automaticallyAdjustsScrollViewInsets = false
+        self.selectedColorButton.layer.cornerRadius = self.selectedColorButton.frame.width / 2
+        self.selectedColorButton.layer.masksToBounds = true
         self.setupImageView()
     }
 
@@ -82,6 +86,7 @@ extension BBMFreeHandDrawingViewController {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath), let cellColor = cell.backgroundColor {
             self.drawController.color = cellColor
+            self.selectedColorButton.backgroundColor = cellColor
         }
     }
 }
