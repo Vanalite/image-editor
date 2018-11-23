@@ -354,7 +354,8 @@ class CroppableImageView: UIImageView, Calibratable {
 
 extension CroppableImageView {
     func cropImage() {
-        guard let image = self.image else { return }
+        guard let currentCgImage = self.image?.cgImage else { return }
+        let image = UIImage(cgImage: currentCgImage, scale: 1.0, orientation: .up)
         var croppedRect = self.cropView.frame
         var width = image.size.width
         var height = image.size.height
@@ -369,7 +370,7 @@ extension CroppableImageView {
         
         let imagePoint = CGPoint(x: image.size.width * percentX, y: image.size.height * percentY)
         croppedRect = CGRect(x: imagePoint.x, y: imagePoint.y, width: width, height: height)
-        if let cgImage = self.image?.cgImage {
+        if let cgImage = image.cgImage {
             if let subImage = cgImage.cropping(to: croppedRect) {
                 let croppedImage = UIImage(cgImage: subImage)
                 self.image = croppedImage;
@@ -415,22 +416,4 @@ extension CroppableImageView {
         let result = UIImage(cgImage: cgImage)
         return result
     }
-    
-//    func calibrateView() {
-//        guard let assignedImage = self.image,
-//        let superView = self.superview else { return }
-//        var width = assignedImage.size.width
-//        var height = assignedImage.size.height
-//        let viewSize = superView.frame.size
-//        let ratio = height / width
-//        width = viewSize.width
-//        height = width * ratio
-//        if height > viewSize.height {
-//            height = viewSize.height
-//            width = height / ratio
-//        }
-//        let x = viewSize.width / 2 - (width / 2)
-//        let y = viewSize.height / 2 - (height / 2)
-//        self.frame = CGRect(x: x, y: y, width: width, height: height)
-//    }
 }
