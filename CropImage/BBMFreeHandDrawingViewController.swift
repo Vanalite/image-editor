@@ -8,13 +8,12 @@
 
 import UIKit
 
-let freeHandImageName = "Image2"
-
 class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var colorPickerCollectionView: UICollectionView!
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var selectedColorButton: UIButton!
+    @IBOutlet weak var brushWidthSlider: VerticalSlider!
     
     @objc public var image: UIImage! {
         didSet {
@@ -30,9 +29,9 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalImage = self.image
-        self.setupUI()
         self.drawController = FreehandDrawController(canvas: self.imageView, view: self.imageView)
         self.drawController.color = self.colorArray.first!
+        self.setupUI()
         self.selectedColorButton.backgroundColor = self.drawController.color
     }
     
@@ -41,18 +40,24 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
         self.imageView.image = self.image
     }
     
-    func setupUI() {
+    fileprivate func setupUI() {
         self.automaticallyAdjustsScrollViewInsets = false
         self.selectedColorButton.layer.cornerRadius = self.selectedColorButton.frame.width / 2
         self.selectedColorButton.layer.masksToBounds = true
         self.setupImageView()
+        self.setupBrushWidthSlider()
     }
 
-    func setupImageView() {
+    fileprivate func setupImageView() {
         self.imageView.contentMode = .scaleAspectFit
         self.imageView.isUserInteractionEnabled = true
         self.imageContainerView.addSubview(self.imageView)
         self.view.sendSubview(toBack: self.imageContainerView)
+    }
+    
+    fileprivate func setupBrushWidthSlider() {
+        self.brushWidthSlider.slider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
+        self.brushWidthSlider.value = Float(self.drawController.width)
     }
     
     @IBAction func undoButtonTouched(_ sender: Any) {
@@ -65,6 +70,10 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
             vc.image = self.image
         }
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func sliderChanged() {
+        self.drawController.width = CGFloat(self.brushWidthSlider.value)
     }
 }
 

@@ -224,10 +224,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rcz-ca-UtK">
-                                <rect key="frame" x="128" y="318" width="118" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </slider>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zd3-mN-LhO" userLabel="Image Container View">
                                 <rect key="frame" x="10" y="10" width="355" height="647"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -323,22 +319,52 @@
                                     <constraint firstItem="gPT-jm-1Gz" firstAttribute="top" secondItem="FgB-Mj-vtt" secondAttribute="top" id="o3B-dD-hgR"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rOT-zt-Hv8" customClass="VerticalSlider" customModule="CropImage" customModuleProvider="target">
+                                <rect key="frame" x="16" y="212.5" width="20" height="242"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="9mk-NY-6oh"/>
+                                    <constraint firstAttribute="height" constant="242" id="wyb-gL-rcK"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isContinuous" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="thumbTintColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="minimumTrackTintColor">
+                                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="maximumTrackTintColor">
+                                        <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="FgB-Mj-vtt" secondAttribute="trailing" id="0qi-aa-xy0"/>
                             <constraint firstAttribute="trailing" secondItem="zd3-mN-LhO" secondAttribute="trailing" constant="10" id="2Q2-sf-qgK"/>
                             <constraint firstItem="FgB-Mj-vtt" firstAttribute="leading" secondItem="86w-5P-GOj" secondAttribute="leading" id="4Ot-8w-AZ9"/>
+                            <constraint firstItem="rOT-zt-Hv8" firstAttribute="centerY" secondItem="86w-5P-GOj" secondAttribute="centerY" id="6Gv-xo-6yU"/>
                             <constraint firstItem="unX-iD-CFB" firstAttribute="top" secondItem="86w-5P-GOj" secondAttribute="top" constant="20" id="LxN-qQ-oNw"/>
                             <constraint firstAttribute="trailing" secondItem="unX-iD-CFB" secondAttribute="trailing" id="MkH-lA-Vsu"/>
                             <constraint firstAttribute="bottom" secondItem="zd3-mN-LhO" secondAttribute="bottom" constant="10" id="OaN-36-hcs"/>
                             <constraint firstItem="unX-iD-CFB" firstAttribute="leading" secondItem="86w-5P-GOj" secondAttribute="leading" id="Yoj-7W-4cd"/>
                             <constraint firstItem="zd3-mN-LhO" firstAttribute="leading" secondItem="86w-5P-GOj" secondAttribute="leading" constant="10" id="aMa-Wz-1bZ"/>
                             <constraint firstAttribute="bottom" secondItem="FgB-Mj-vtt" secondAttribute="bottom" id="d0u-ks-eGA"/>
+                            <constraint firstItem="rOT-zt-Hv8" firstAttribute="leading" secondItem="86w-5P-GOj" secondAttribute="leading" constant="16" id="puz-r1-nNk"/>
                             <constraint firstItem="zd3-mN-LhO" firstAttribute="top" secondItem="86w-5P-GOj" secondAttribute="top" constant="10" id="zer-Gf-eoK"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="brushWidthSlider" destination="rOT-zt-Hv8" id="wFy-s5-px3"/>
                         <outlet property="colorPickerCollectionView" destination="gPT-jm-1Gz" id="3US-Nf-Yz5"/>
                         <outlet property="imageContainerView" destination="zd3-mN-LhO" id="uPg-z8-FXd"/>
                         <outlet property="selectedColorButton" destination="0aU-90-ESo" id="Iya-dS-YVP"/>
