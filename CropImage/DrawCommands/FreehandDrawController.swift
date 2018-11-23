@@ -1,9 +1,9 @@
 //
-//  FreehandDrawController.swift
-//  FreehandDrawing-iOS
+//  BBMFreeHandDrawingViewController.swift
+//  Alaska
 //
-//  Created by Miguel Angel Quinones on 03/06/2015.
-//  Copyright (c) 2015 badoo. All rights reserved.
+//  Created by ea on 11/22/18.
+//  Copyright © 2018 ea. All rights reserved.
 //
 
 import UIKit

@@ -1,6 +1,6 @@
 //
 //  CalibratableProtocol.swift
-//  CropImage
+//  Alaska
 //
 //  Created by ea on 11/22/18.
 //  Copyright © 2018 ea. All rights reserved.
