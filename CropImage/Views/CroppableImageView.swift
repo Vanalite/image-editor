@@ -361,15 +361,40 @@ class CroppableImageView: UIImageView, Calibratable {
         var deltaX = changedEdge.contains(.left) || changedEdge.contains(.right) ? touchPoint.x - firstTouchLocation.x : 0
         var deltaY = changedEdge.contains(.top) || changedEdge.contains(.bottom) ? touchPoint.y - firstTouchLocation.y : 0
         if abs(deltaX) > abs(deltaY) {
-            deltaY = deltaX / self.frameRatio
+            let value = abs(deltaX / self.frameRatio)
+            if deltaY == 0 {
+                deltaY = deltaX / self.frameRatio
+            } else if deltaY < 0 {
+                deltaY = -1 * value
+            } else {
+                deltaY = value
+            }
         } else {
-            deltaX = deltaY * self.frameRatio
+            let value = abs(deltaY * self.frameRatio)
+            if deltaX == 0 {
+                deltaX = deltaY * self.frameRatio
+            } else if deltaX < 0 {
+                deltaX = -1 * value
+            } else {
+                deltaX = value
+            }
         }
         
-        let t0 = CGAffineTransform(translationX: -(cropFrame.origin.x + cropFrame.width), y: -cropFrame.origin.y)
-        let t1 =  (scaleX: 1.001, y: 1.001)
-        let t2 = CGAffineTransform(translationX: (cropFrame.origin.x + cropFrame.width), y: cropFrame.origin.y)
-        cropFrame = cropFrame.applying(t0.concatenating(t1).concatenating(t2))
+        if changedEdge.contains(.left) && changedEdge.contains(.bottom) {
+            cropFrame.size.width -= deltaX
+            cropFrame.origin.x += deltaX
+            cropFrame.size.height += deltaY
+        } else if changedEdge.contains(.left) {
+            cropFrame.size.width -= deltaX
+            cropFrame.origin.x += deltaX
+            cropFrame.size.height -= deltaY
+            cropFrame.origin.y += deltaY / 2
+        } else  if changedEdge.contains(.bottom) {
+            cropFrame.size.height += deltaY
+            cropFrame.size.width += deltaX
+            cropFrame.origin.x -= deltaX / 2
+        }
+        
         self.cropView.frame = cropFrame
         self.cropView.layoutSubviews()
         self.renderDarkOverlay()
@@ -430,9 +455,9 @@ extension CroppableImageView {
         self.fixRation = fixRatio
         self.frameRatio = self.ratioValue(fixRatio: fixRatio)
         if self.cropView.frame.width < self.cropView.frame.height {
-            self.assignCropFrameRation(width: self.cropView.frame.width, height: nil)
+            self.assignCropFrameRation(width: 50, height: nil)
         } else {
-            self.assignCropFrameRation(width: nil, height: self.cropView.frame.height)
+            self.assignCropFrameRation(width: nil, height: 50)
         }
     }
     

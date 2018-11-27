@@ -27,7 +27,6 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalImage = self.image
-        // Changed in real app
         self.setupUI()
     }
     
@@ -89,6 +88,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         
         let twoThree = UIAlertAction(title: "2:3", style: .default) { (action) in
             self.frameActionSheet.dismiss(animated: true, completion: nil)
+            self.imageView.fixCropFrame(fixRatio: .twoThree)
         }
         self.frameActionSheet.addAction(twoThree)
     }
