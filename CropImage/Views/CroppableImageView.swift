@@ -11,6 +11,15 @@ import UIKit
 let kTouchValidatePaddingRation: CGFloat = 0.2
 let kCornerSideLength: CGFloat = 20
 
+enum FixedRatioFrame : Int {
+    case none = 0
+    case original
+    case fitToScreen
+    case square
+    case twoThree
+    case count
+}
+
 enum CropFrameAction : Int {
     case None = 0
     case Move = 1
@@ -27,6 +36,8 @@ class CroppableImageView: UIImageView, Calibratable {
     var changedEdge: UIRectEdge?
     var cropAction = CropFrameAction.None
     var validatingTouchingFrame: CGRect?
+    var fixRation = FixedRatioFrame.none
+    var frameRatio: CGFloat = 0.0
     
     override var image: UIImage? {
         didSet {
@@ -125,13 +136,6 @@ class CroppableImageView: UIImageView, Calibratable {
         topRightView.topAnchor.constraint(equalTo: self.cropView.topAnchor, constant: -1).isActive = true
         
         self.cropView.layoutSubviews()
-    }
-    
-    func resetCropViewFrame() {
-        let size = self.bounds.size
-        self.cropView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        self.cropView.center = CGPoint(x: size.width / 2, y: size.height / 2)
-        self.renderDarkOverlay()
     }
     
     func renderDarkOverlay() {
@@ -292,6 +296,10 @@ class CroppableImageView: UIImageView, Calibratable {
     }
     
     func resizeCropFrame(touchedPoint touchPoint: CGPoint) {
+        if self.fixRation != .none {
+            self.resizeFixedCropFrame(touchedPoint: touchPoint)
+            return
+        }
         guard let firstTouchLocation = self.firstTouchLocation,
             let changedEdge = self.changedEdge else {
             return
@@ -339,8 +347,34 @@ class CroppableImageView: UIImageView, Calibratable {
         }
         self.cropView.frame = cropFrame
         self.cropView.layoutSubviews()
-        self.firstTouchLocation = touchPoint
         self.renderDarkOverlay()
+        self.firstTouchLocation = touchPoint
+    }
+    
+    func resizeFixedCropFrame(touchedPoint touchPoint: CGPoint) {
+        guard let firstTouchLocation = self.firstTouchLocation,
+            let changedEdge = self.changedEdge else {
+                return
+        }
+        var cropFrame = self.cropView.frame
+        
+        var deltaX = changedEdge.contains(.left) || changedEdge.contains(.right) ? touchPoint.x - firstTouchLocation.x : 0
+        var deltaY = changedEdge.contains(.top) || changedEdge.contains(.bottom) ? touchPoint.y - firstTouchLocation.y : 0
+        if abs(deltaX) > abs(deltaY) {
+            deltaY = deltaX / self.frameRatio
+        } else {
+            deltaX = deltaY * self.frameRatio
+        }
+        
+        let t0 = CGAffineTransform(translationX: -(cropFrame.origin.x + cropFrame.width), y: -cropFrame.origin.y)
+        let t1 =  (scaleX: 1.001, y: 1.001)
+        let t2 = CGAffineTransform(translationX: (cropFrame.origin.x + cropFrame.width), y: cropFrame.origin.y)
+        cropFrame = cropFrame.applying(t0.concatenating(t1).concatenating(t2))
+        self.cropView.frame = cropFrame
+        self.cropView.layoutSubviews()
+        self.renderDarkOverlay()
+        self.firstTouchLocation = touchPoint
+
     }
     
     func isCropFrameExceedLimit(_ cropFrame: CGRect) -> Bool {
@@ -392,6 +426,16 @@ extension CroppableImageView {
         self.resetState()
     }
     
+    func fixCropFrame(fixRatio: FixedRatioFrame) {
+        self.fixRation = fixRatio
+        self.frameRatio = self.ratioValue(fixRatio: fixRatio)
+        if self.cropView.frame.width < self.cropView.frame.height {
+            self.assignCropFrameRation(width: self.cropView.frame.width, height: nil)
+        } else {
+            self.assignCropFrameRation(width: nil, height: self.cropView.frame.height)
+        }
+    }
+    
     // MARK: Private Methods
     private func rotateImage(_ image: UIImage, angle: CGFloat) -> UIImage  {
         let ciImage = CIImage(image:image)
@@ -415,5 +459,48 @@ extension CroppableImageView {
         }
         let result = UIImage(cgImage: cgImage)
         return result
+    }
+    
+    private func assignCropFrameRation(width: CGFloat?, height: CGFloat?) {
+        var fWidth, fHeight : CGFloat!
+        
+        if width == nil, let height = height {
+            fWidth = height * self.frameRatio
+            fHeight = height
+        } else if height == nil, let width = width {
+            fWidth = width
+            fHeight = width / self.frameRatio
+        } else if let width = width, let height = height {
+            fHeight = height
+            fWidth = width
+        }
+        
+        let cropFrame = CGRect(x: 0, y: 0, width: fWidth, height: fHeight)
+        self.cropView.frame = cropFrame
+        self.cropView.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
+        self.cropView.layoutSubviews()
+        self.renderDarkOverlay()
+
+    }
+    
+    private func resetCropViewFrame() {
+        let size = self.bounds.size
+        self.cropView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        self.cropView.center = CGPoint(x: size.width / 2, y: size.height / 2)
+        self.renderDarkOverlay()
+    }
+    
+    private func ratioValue(fixRatio: FixedRatioFrame) -> CGFloat {
+        switch fixRatio {
+        case .original:
+            guard let image = self.image else { return 0 }
+            return image.size.width / image.size.height
+        case .square:
+            return 1.0
+        case .twoThree:
+            return 2.0 / 3.0
+        default:
+            return 0
+        }
     }
 }

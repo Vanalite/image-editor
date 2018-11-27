@@ -93,6 +93,15 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		0421924821AB9780002D2308 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */,
+				04F07A6921A671DD00B79990 /* BBMFreeHandDrawingViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
 		04F07A3E21A3B90B00B79990 = {
 			isa = PBXGroup;
 			children = (
@@ -112,17 +121,16 @@
 		04F07A4921A3B90B00B79990 /* CropImage */ = {
 			isa = PBXGroup;
 			children = (
-				0421924021A7E5AE002D2308 /* Protocols */,
-				0421923F21A7E58F002D2308 /* Views */,
-				0421922921A6A5C8002D2308 /* DrawCommands */,
-				04F07A4A21A3B90B00B79990 /* AppDelegate.swift */,
-				04F07A4C21A3B90B00B79990 /* BBMCropRotateImageViewController.swift */,
-				04F07A6921A671DD00B79990 /* BBMFreeHandDrawingViewController.swift */,
-				0421923D21A6CE09002D2308 /* ImagePreviewViewController.swift */,
-				04F07A5121A3B90D00B79990 /* Assets.xcassets */,
-				04F07A5321A3B90D00B79990 /* LaunchScreen.storyboard */,
 				04F07A5621A3B90D00B79990 /* Info.plist */,
 				04F07A5E21A3BC5700B79990 /* Main.storyboard */,
+				04F07A4A21A3B90B00B79990 /* AppDelegate.swift */,
+				0421923D21A6CE09002D2308 /* ImagePreviewViewController.swift */,
+				04F07A5121A3B90D00B79990 /* Assets.xcassets */,
+				0421922921A6A5C8002D2308 /* DrawCommands */,
+				04F07A5321A3B90D00B79990 /* LaunchScreen.storyboard */,
+				0421924021A7E5AE002D2308 /* Protocols */,
+				0421924821AB9780002D2308 /* ViewControllers */,
+				0421923F21A7E58F002D2308 /* Views */,
 			);
 			path = CropImage;
 			sourceTree = "<group>";

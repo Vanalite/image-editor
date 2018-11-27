@@ -60,13 +60,25 @@
                                             <action selector="cropButtonTouched:" destination="RW4-FT-p5L" eventType="touchUpInside" id="b6P-rm-L3k"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="we5-j6-70S" userLabel="Custom Frame">
+                                        <rect key="frame" x="251" y="0.0" width="44" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Frame">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="customFrameButtonTouched:" destination="RW4-FT-p5L" eventType="touchUpInside" id="uoA-7G-rVB"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="we5-j6-70S" secondAttribute="trailing" constant="80" id="5hH-vz-FLh"/>
                                     <constraint firstItem="2lk-cO-wpq" firstAttribute="height" secondItem="xhf-BX-Fa3" secondAttribute="height" id="9Tk-Of-x5q"/>
                                     <constraint firstItem="IF3-Wd-Sic" firstAttribute="centerY" secondItem="xhf-BX-Fa3" secondAttribute="centerY" id="CvP-Zf-iVG"/>
                                     <constraint firstAttribute="height" constant="30" id="EkU-U7-A0G"/>
                                     <constraint firstItem="t6P-yz-N8s" firstAttribute="centerY" secondItem="xhf-BX-Fa3" secondAttribute="centerY" id="JiS-yS-b6M"/>
+                                    <constraint firstItem="we5-j6-70S" firstAttribute="centerY" secondItem="xhf-BX-Fa3" secondAttribute="centerY" id="LeM-JP-MMp"/>
                                     <constraint firstItem="IF3-Wd-Sic" firstAttribute="height" secondItem="xhf-BX-Fa3" secondAttribute="height" id="Pm2-Tm-Alj"/>
                                     <constraint firstItem="t6P-yz-N8s" firstAttribute="leading" secondItem="xhf-BX-Fa3" secondAttribute="leading" constant="10" id="Ylu-uS-iPP"/>
                                     <constraint firstItem="IF3-Wd-Sic" firstAttribute="centerX" secondItem="xhf-BX-Fa3" secondAttribute="centerX" id="cMO-IW-fH1"/>
@@ -130,6 +142,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="customFrameButton" destination="we5-j6-70S" id="2lV-z1-syz"/>
                         <outlet property="imageContainerView" destination="aGT-fa-4Je" id="b7C-ec-H6C"/>
                         <outlet property="scrollView" destination="FND-nd-faX" id="D0T-y5-76b"/>
                     </connections>

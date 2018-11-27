@@ -12,6 +12,9 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var customFrameButton: UIButton!
+    let frameActionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    
     @objc public var image: UIImage! {
         didSet {
             self.imageView.image = image
@@ -19,6 +22,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     var originalImage: UIImage?
     let imageView = CroppableImageView()
+    var fixCropFrame = FixedRatioFrame.none;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +45,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.automaticallyAdjustsScrollViewInsets = false
         self.setupScrollView()
         self.setupImageView()
+        self.setupFrameActionSheet()
     }
     
     func setupScrollView() {
@@ -56,6 +61,36 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.imageView.isUserInteractionEnabled = true
         self.imageContainerView.addSubview(self.imageView)
         self.view.sendSubview(toBack: self.imageContainerView)
+    }
+    
+    func setupFrameActionSheet() {
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            self.frameActionSheet.dismiss(animated: true, completion: nil)
+            self.customFrameButton.isHighlighted = false
+        }
+        self.frameActionSheet.addAction(cancel)
+
+        let original = UIAlertAction(title: "Original", style: .default) { (action) in
+            self.fixCropFrame = .original
+            self.frameActionSheet.dismiss(animated: true, completion: nil)
+        }
+        self.frameActionSheet.addAction(original)
+        
+        let fitToScreen = UIAlertAction(title: "Fit to screen", style: .default) { (action) in
+            self.frameActionSheet.dismiss(animated: true, completion: nil)
+        }
+        self.frameActionSheet.addAction(fitToScreen)
+
+        let square = UIAlertAction(title: "Square", style: .default) { (action) in
+            self.frameActionSheet.dismiss(animated: true, completion: nil)
+            self.imageView.fixCropFrame(fixRatio: .square)
+        }
+        self.frameActionSheet.addAction(square)
+        
+        let twoThree = UIAlertAction(title: "2:3", style: .default) { (action) in
+            self.frameActionSheet.dismiss(animated: true, completion: nil)
+        }
+        self.frameActionSheet.addAction(twoThree)
     }
     
     @objc func zoomImage() {
@@ -94,6 +129,17 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.popViewController(animated: true)
         self.imageView.hideGridView()
     }
+    
+    @IBAction func customFrameButtonTouched(_ sender: Any) {
+        if (self.fixCropFrame != .none) {
+            self.fixCropFrame = .none
+            self.customFrameButton.isHighlighted = false
+        } else {
+            self.customFrameButton.isHighlighted = true
+            self.present(self.frameActionSheet, animated: false, completion: nil)
+        }
+    }
+
 }
 
 extension BBMCropRotateImageViewController {

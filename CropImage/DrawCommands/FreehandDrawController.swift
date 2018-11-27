@@ -78,7 +78,21 @@ class FreehandDrawController : NSObject {
     private func continueAtPoint(point: CGPoint) {
         self.countPoint += 1
         self.lastPoints[countPoint] = point
-        self.freeDraw(point: point)
+        self.freeDraw2(point: point)
+    }
+    
+    func freeDraw2(point: CGPoint) {
+        if self.countPoint == 3 {
+            self.lastPoints[2] = self.midPoint(a: self.lastPoints[1], b: self.lastPoints[3])
+            let subArray = Array(self.lastPoints.prefix(3))
+            let lineCommand = LineDrawCommand(points: subArray, width: self.width, color: self.color)
+            self.canvas.executeCommands(commands: [lineCommand])
+            self.lineStrokeCommand?.addCommand(command: lineCommand)
+            
+            self.lastPoints[0] = self.lastPoints[2]
+            self.lastPoints[1] = self.lastPoints[3]
+            self.countPoint = 1
+        }
     }
     
     private func endAtPoint(point: CGPoint) {
@@ -86,8 +100,8 @@ class FreehandDrawController : NSObject {
         self.lastPoints[countPoint] = point
         switch self.countPoint {
         case 1:
-            let smallListArray = [self.lastPoints[0], self.lastPoints[1]]
-            let lineCommand = LineDrawCommand(points: smallListArray, width: self.width, color: self.color)
+            let subArray = Array(self.lastPoints.prefix(2))
+            let lineCommand = LineDrawCommand(points: subArray, width: self.width, color: self.color)
             self.canvas.executeCommands(commands: [lineCommand])
             self.lineStrokeCommand?.addCommand(command: lineCommand)
         case 2:
@@ -95,8 +109,8 @@ class FreehandDrawController : NSObject {
             self.lastPoints[countPoint] = point
             fallthrough
         case 3:
-            let smallListArray = [self.lastPoints[0], self.lastPoints[1], self.lastPoints[2]]
-            let lineCommand = LineDrawCommand(points: smallListArray, width: self.width, color: self.color)
+            let subArray = Array(self.lastPoints.prefix(3))
+            let lineCommand = LineDrawCommand(points: subArray, width: self.width, color: self.color)
             self.canvas.executeCommands(commands: [lineCommand])
             self.lineStrokeCommand?.addCommand(command: lineCommand)
             
