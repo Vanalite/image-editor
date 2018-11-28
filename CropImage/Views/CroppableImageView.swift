@@ -8,7 +8,7 @@
 
 import UIKit
 
-let kTouchValidatePaddingRation: CGFloat = 0.2
+let kTouchValidatePaddingRatio: CGFloat = 0.2
 let kCornerSideLength: CGFloat = 20
 
 enum FixedRatioFrame : Int {
@@ -36,7 +36,7 @@ class CroppableImageView: UIImageView, Calibratable {
     var changedEdge: UIRectEdge?
     var cropAction = CropFrameAction.None
     var validatingTouchingFrame: CGRect?
-    var fixRation = FixedRatioFrame.none
+    var fixRatio = FixedRatioFrame.none
     var frameRatio: CGFloat = 0.0
     
     override var image: UIImage? {
@@ -55,12 +55,12 @@ class CroppableImageView: UIImageView, Calibratable {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupUI() {
+    private func setupUI() {
         self.setupCropView()
         self.setupGesture()
     }
     
-    func setupCropView() {
+    private func setupCropView() {
         self.cropView.frame = .zero
         self.cropView.clipsToBounds = false
         self.cropView.backgroundColor = .clear
@@ -73,7 +73,7 @@ class CroppableImageView: UIImageView, Calibratable {
         self.addDebugDragingFrame()
     }
     
-    func createShapeLayer(path: UIBezierPath) -> CAShapeLayer {
+    private func createShapeLayer(path: UIBezierPath) -> CAShapeLayer {
         let shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor.white.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
@@ -83,7 +83,7 @@ class CroppableImageView: UIImageView, Calibratable {
         return shapeLayer
     }
     
-    func createCornerView(layer: CAShapeLayer) -> UIView {
+    private func createCornerView(layer: CAShapeLayer) -> UIView {
         let cornerView = UIView()
         cornerView.backgroundColor = .clear
         cornerView.layer.addSublayer(layer)
@@ -93,7 +93,7 @@ class CroppableImageView: UIImageView, Calibratable {
         return cornerView
     }
     
-    func setupCropViewCorners() {
+    private func setupCropViewCorners() {
         var path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: kCornerSideLength))
         path.addLine(to: CGPoint(x: 0, y: 0))
@@ -138,7 +138,7 @@ class CroppableImageView: UIImageView, Calibratable {
         self.cropView.layoutSubviews()
     }
     
-    func renderDarkOverlay() {
+    private func renderDarkOverlay() {
         let path = UIBezierPath(rect: self.cropView.frame)
         let fullPath = UIBezierPath(rect: self.bounds)
         path.append(fullPath)
@@ -154,7 +154,7 @@ class CroppableImageView: UIImageView, Calibratable {
         self.layer.insertSublayer(fillLayer, below: self.cropView.layer)
     }
     
-    func addDebugDragingFrame() {
+    private func addDebugDragingFrame() {
         let touchView = UIView(frame: .zero)
         touchView.layer.borderColor = UIColor.red.cgColor
         touchView.layer.borderWidth = 2
@@ -167,7 +167,7 @@ class CroppableImageView: UIImageView, Calibratable {
         self.cropView.layoutSubviews()
     }
     
-    func setupGridView() {
+    private func setupGridView() {
         self.verticalGridView.layer.borderColor = UIColor.white.cgColor
         self.verticalGridView.layer.borderWidth = 1
         self.cropView.addSubview(self.verticalGridView)
@@ -187,23 +187,14 @@ class CroppableImageView: UIImageView, Calibratable {
         self.horizontalGridView.widthAnchor.constraint(equalTo: self.cropView.widthAnchor).isActive = true
     }
     
-    func showGridView() {
-        self.verticalGridView.isHidden = false
-        self.horizontalGridView.isHidden = false
-    }
-    
-    func hideGridView() {
-        self.verticalGridView.isHidden = true
-        self.horizontalGridView.isHidden = true
-    }
-    
-    func setupGesture() {
+    private func setupGesture() {
         let panRecognizer = UIPanGestureRecognizer(target:self, action:#selector(self.handlePanMove(sender:)))
         panRecognizer.minimumNumberOfTouches = 1
         panRecognizer.maximumNumberOfTouches = 1
         self.addGestureRecognizer(panRecognizer)
     }
     
+    // MARK: Private Methods
     @objc private func handlePanMove(sender: UIPanGestureRecognizer) {
         guard let senderView = sender.view else { return }
         let locationPoint = sender.location(in: senderView)
@@ -229,10 +220,10 @@ class CroppableImageView: UIImageView, Calibratable {
         sender.setTranslation(.zero, in:senderView)
     }
     
-    func assignActionForCropFrame(withPoint point: CGPoint) {
+    private func assignActionForCropFrame(withPoint point: CGPoint) {
         var cropFrame = self.cropView.frame
-        let deltaWidth = cropFrame.width * kTouchValidatePaddingRation
-        let deltaHeight = cropFrame.height * kTouchValidatePaddingRation
+        let deltaWidth = cropFrame.width * kTouchValidatePaddingRatio
+        let deltaHeight = cropFrame.height * kTouchValidatePaddingRatio
         cropFrame = cropFrame.insetBy(dx: deltaWidth, dy: deltaHeight)
         self.validatingTouchingFrame = cropFrame
         if cropFrame.contains(point) {
@@ -242,12 +233,12 @@ class CroppableImageView: UIImageView, Calibratable {
         }
     }
     
-    func prepareToMoveCropFrame(initialPoint point:CGPoint) {
+    private func prepareToMoveCropFrame(initialPoint point:CGPoint) {
         self.bringSubview(toFront: self.cropView)
         self.cropAction = .Move
     }
 
-    func prepareToResizeCropFrame(initialPoint point:CGPoint) {
+    private func prepareToResizeCropFrame(initialPoint point:CGPoint) {
         guard let cropFrame = self.validatingTouchingFrame else { return }
         self.cropAction = .Resize
         self.firstTouchLocation = point
@@ -265,13 +256,13 @@ class CroppableImageView: UIImageView, Calibratable {
         self.changedEdge = changedEdge
     }
     
-    func endCropAction() {
+    private func endCropAction() {
         self.cropAction = .None
         self.firstTouchLocation = nil
         self.changedEdge = nil
     }
     
-    func moveCropFrame(touchedPoint point: CGPoint) {
+    private func moveCropFrame(touchedPoint point: CGPoint) {
         self.bringSubview(toFront: self.cropView)
         let translatedPoint = CGPoint(x: self.cropView.center.x + point.x, y: self.cropView.center.y + point.y)
 
@@ -295,8 +286,8 @@ class CroppableImageView: UIImageView, Calibratable {
         self.renderDarkOverlay()
     }
     
-    func resizeCropFrame(touchedPoint touchPoint: CGPoint) {
-        if self.fixRation != .none {
+    private func resizeCropFrame(touchedPoint touchPoint: CGPoint) {
+        if self.fixRatio != .none {
             self.resizeFixedCropFrame(touchedPoint: touchPoint)
             return
         }
@@ -312,97 +303,119 @@ class CroppableImageView: UIImageView, Calibratable {
         if changedEdge.contains(.left) {
             cropFrame.size.width -= deltaX
             cropFrame.origin.x += deltaX
-            if cropFrame.origin.x < 0 {
-                let delta = -cropFrame.origin.x
-                cropFrame.origin.x = 0
-                cropFrame.size.width -= delta
-            }
         }
         if changedEdge.contains(.right) {
             cropFrame.size.width += deltaX
-            if cropFrame.maxX > self.frame.width {
-                let delta = cropFrame.maxX - self.frame.width
-                cropFrame.size.width -= delta
-            }
         }
-        
         if changedEdge.contains(.top) {
             cropFrame.size.height -= deltaY
             cropFrame.origin.y += deltaY
-            if cropFrame.origin.y < 0 {
-                let delta = -cropFrame.origin.y
-                cropFrame.origin.y = 0
-                cropFrame.size.height -= delta
-            }
         }
         if changedEdge.contains(.bottom) {
             cropFrame.size.height += deltaY
-            if cropFrame.maxY > self.frame.height {
-                let delta = cropFrame.maxY - self.frame.height
-                cropFrame.size.height -= delta
-            }
         }
-        if (self.isCropFrameExceedLimit(cropFrame)) {
-            return
-        }
-        self.cropView.frame = cropFrame
-        self.cropView.layoutSubviews()
-        self.renderDarkOverlay()
+        cropFrame = self.refineFreeCropFrame(frame: cropFrame)
+        self.assignCropFrameRatio(cropFrame: cropFrame)
         self.firstTouchLocation = touchPoint
     }
     
-    func resizeFixedCropFrame(touchedPoint touchPoint: CGPoint) {
+    private func resizeFixedCropFrame(touchedPoint touchPoint: CGPoint) {
         guard let firstTouchLocation = self.firstTouchLocation,
             let changedEdge = self.changedEdge else {
                 return
         }
-        var cropFrame = self.cropView.frame
         
         var deltaX = changedEdge.contains(.left) || changedEdge.contains(.right) ? touchPoint.x - firstTouchLocation.x : 0
         var deltaY = changedEdge.contains(.top) || changedEdge.contains(.bottom) ? touchPoint.y - firstTouchLocation.y : 0
+        if deltaX == 0 && deltaY == 0 {
+            return
+        }
+        var x, y, width, height: CGFloat!
         if abs(deltaX) > abs(deltaY) {
-            let value = abs(deltaX / self.frameRatio)
-            if deltaY == 0 {
-                deltaY = deltaX / self.frameRatio
-            } else if deltaY < 0 {
-                deltaY = -1 * value
-            } else {
-                deltaY = value
+            deltaY = deltaX / self.frameRatio
+            if changedEdge.contains(.left) {
+                if changedEdge.contains(.top) {
+                    y = deltaY
+                } else if changedEdge.contains(.bottom) {
+                    y = 0
+                } else {
+                    y = deltaY / 2
+                }
+                height = -deltaY
+                width = -deltaX
+                x = deltaX
+            } else if changedEdge.contains(.right) {
+                if changedEdge.contains(.top) {
+                    y = -deltaY
+                } else if changedEdge.contains(.bottom) {
+                    y = 0
+                } else {
+                    y = -deltaY / 2
+                }
+                height = deltaY
+                width = deltaX
+                x = 0
             }
         } else {
-            let value = abs(deltaY * self.frameRatio)
-            if deltaX == 0 {
-                deltaX = deltaY * self.frameRatio
-            } else if deltaX < 0 {
-                deltaX = -1 * value
-            } else {
-                deltaX = value
+            deltaX = deltaY * self.frameRatio
+            if changedEdge.contains(.top) {
+                if changedEdge.contains(.left) {
+                    x = deltaX
+                } else if changedEdge.contains(.right) {
+                    x = 0
+                } else {
+                    x = deltaX / 2
+                }
+                width = -deltaX
+                height = -deltaY
+                y = deltaY
+            } else if changedEdge.contains(.bottom) {
+                if changedEdge.contains(.left) {
+                    x = -deltaX
+                } else if changedEdge.contains(.right) {
+                    x = 0
+                } else {
+                    x = -deltaX / 2
+                }
+                width = deltaX
+                height = deltaY
+                y = 0
             }
         }
+        var cropFrame = self.cropView.frame
+        cropFrame.size.width += width
+        cropFrame.origin.x += x
+        cropFrame.size.height += height
+        cropFrame.origin.y += y
         
-        if changedEdge.contains(.left) && changedEdge.contains(.bottom) {
-            cropFrame.size.width -= deltaX
-            cropFrame.origin.x += deltaX
-            cropFrame.size.height += deltaY
-        } else if changedEdge.contains(.left) {
-            cropFrame.size.width -= deltaX
-            cropFrame.origin.x += deltaX
-            cropFrame.size.height -= deltaY
-            cropFrame.origin.y += deltaY / 2
-        } else  if changedEdge.contains(.bottom) {
-            cropFrame.size.height += deltaY
-            cropFrame.size.width += deltaX
-            cropFrame.origin.x -= deltaX / 2
-        }
-        
-        self.cropView.frame = cropFrame
-        self.cropView.layoutSubviews()
-        self.renderDarkOverlay()
+        self.assignCropFrameRatio(cropFrame: cropFrame)
         self.firstTouchLocation = touchPoint
-
     }
     
-    func isCropFrameExceedLimit(_ cropFrame: CGRect) -> Bool {
+    private func refineFreeCropFrame(frame: CGRect) -> CGRect {
+        var cropFrame = frame
+        if cropFrame.origin.x < 0 {
+            let delta = -cropFrame.origin.x
+            cropFrame.origin.x = 0
+            cropFrame.size.width -= delta
+        }
+        if cropFrame.maxX > self.frame.width {
+            let delta = cropFrame.maxX - self.frame.width
+            cropFrame.size.width -= delta
+        }
+        if cropFrame.origin.y < 0 {
+            let delta = -cropFrame.origin.y
+            cropFrame.origin.y = 0
+            cropFrame.size.height -= delta
+        }
+        if cropFrame.maxY > self.frame.height {
+            let delta = cropFrame.maxY - self.frame.height
+            cropFrame.size.height -= delta
+        }
+        return cropFrame
+    }
+    
+    private func isCropFrameExceedLimit(_ cropFrame: CGRect) -> Bool {
         if (cropFrame.size.height < self.defaultMinimumFrameSize || cropFrame.size.width < self.defaultMinimumFrameSize) ||
             (!self.bounds.contains(cropFrame)) {
             return true
@@ -412,6 +425,16 @@ class CroppableImageView: UIImageView, Calibratable {
 }
 
 extension CroppableImageView {
+    func showGridView() {
+        self.verticalGridView.isHidden = false
+        self.horizontalGridView.isHidden = false
+    }
+    
+    func hideGridView() {
+        self.verticalGridView.isHidden = true
+        self.horizontalGridView.isHidden = true
+    }
+
     func cropImage() {
         guard let currentCgImage = self.image?.cgImage else { return }
         let image = UIImage(cgImage: currentCgImage, scale: 1.0, orientation: .up)
@@ -440,7 +463,7 @@ extension CroppableImageView {
     
     func resetState() {
         self.calibrateView()
-        self.resetCropViewFrame()
+        assignCropFrameRatio(cropFrame: self.bounds)
     }
     
     func rotate() {
@@ -452,12 +475,12 @@ extension CroppableImageView {
     }
     
     func fixCropFrame(fixRatio: FixedRatioFrame) {
-        self.fixRation = fixRatio
+        self.fixRatio = fixRatio
         self.frameRatio = self.ratioValue(fixRatio: fixRatio)
-        if self.cropView.frame.width < self.cropView.frame.height {
-            self.assignCropFrameRation(width: 50, height: nil)
+        if self.frame.width < self.frame.height {
+            self.assignDefaultCropFrameRatio(width: self.frame.width, height: nil)
         } else {
-            self.assignCropFrameRation(width: nil, height: 50)
+            self.assignDefaultCropFrameRatio(width: nil, height: self.frame.height)
         }
     }
     
@@ -486,8 +509,8 @@ extension CroppableImageView {
         return result
     }
     
-    private func assignCropFrameRation(width: CGFloat?, height: CGFloat?) {
-        var fWidth, fHeight : CGFloat!
+    private func assignDefaultCropFrameRatio(width: CGFloat?, height: CGFloat?) {
+        var fWidth, fHeight, fx, fy : CGFloat!
         
         if width == nil, let height = height {
             fWidth = height * self.frameRatio
@@ -499,19 +522,20 @@ extension CroppableImageView {
             fHeight = height
             fWidth = width
         }
+        let center = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        fx = center.x - fWidth/2
+        fy = center.y - fHeight/2
         
-        let cropFrame = CGRect(x: 0, y: 0, width: fWidth, height: fHeight)
-        self.cropView.frame = cropFrame
-        self.cropView.center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
-        self.cropView.layoutSubviews()
-        self.renderDarkOverlay()
-
+        let cropFrame = CGRect(x: fx, y: fy, width: fWidth, height: fHeight)
+        self.assignCropFrameRatio(cropFrame: cropFrame)
     }
     
-    private func resetCropViewFrame() {
-        let size = self.bounds.size
-        self.cropView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        self.cropView.center = CGPoint(x: size.width / 2, y: size.height / 2)
+    private func assignCropFrameRatio(cropFrame: CGRect) {
+        if (self.isCropFrameExceedLimit(cropFrame)) {
+            return
+        }
+        self.cropView.frame = cropFrame
+        self.cropView.layoutSubviews()
         self.renderDarkOverlay()
     }
     
