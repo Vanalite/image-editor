@@ -535,11 +535,12 @@ extension CroppableImageView {
     func fixCropFrame(fixRatio: FixedRatioFrame) {
         self.fixRatio = fixRatio
         self.frameRatio = self.ratioValue(fixRatio: fixRatio)
-        if self.frame.width < self.frame.height {
-            self.assignDefaultCropFrameRatio(width: self.frame.width, height: nil)
-        } else {
+        if self.frame.width / self.frameRatio > self.frame.height {
             self.assignDefaultCropFrameRatio(width: nil, height: self.frame.height)
+        } else if self.frame.width < self.frame.height * self.frameRatio {
+            self.assignDefaultCropFrameRatio(width: self.frame.width, height: nil)
         }
+        self.assignDefaultCropFrameRatio(width: nil, height: self.frame.height)
     }
     
     // MARK: Private Methods
