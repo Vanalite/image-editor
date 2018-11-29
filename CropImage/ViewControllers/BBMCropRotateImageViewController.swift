@@ -136,10 +136,6 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @IBAction func cropButtonTouched(_ sender: Any) {
-        self.imageView.cropImage()
-    }
-    
     @IBAction func resetButtonTouched(_ sender: Any) {
         self.image = self.originalImage
         self.imageView.resetState()

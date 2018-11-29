@@ -25,7 +25,7 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     var originalImage: UIImage?
     let imageView = DrawableImageView()
     private var drawController: FreehandDrawController!
-    let colorArray: [UIColor] = [.white, .black, .red, .blue, .green, .yellow, .cyan, .magenta, .orange, .purple, .brown]
+    let colorArray: [UIColor] = [.black, .red, .blue, .green, .yellow, .cyan, .magenta, .orange, .purple, .brown, .gray]
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
