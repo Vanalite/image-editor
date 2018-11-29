@@ -325,77 +325,128 @@ class CroppableImageView: UIImageView, Calibratable {
                 return
         }
         
-        var deltaX = changedEdge.contains(.left) || changedEdge.contains(.right) ? touchPoint.x - firstTouchLocation.x : 0
-        var deltaY = changedEdge.contains(.top) || changedEdge.contains(.bottom) ? touchPoint.y - firstTouchLocation.y : 0
-        if deltaX == 0 && deltaY == 0 {
+        var touchDeltaX = changedEdge.contains(.left) || changedEdge.contains(.right) ? touchPoint.x - firstTouchLocation.x : 0
+        var touchDeltaY = changedEdge.contains(.top) || changedEdge.contains(.bottom) ? touchPoint.y - firstTouchLocation.y : 0
+        if touchDeltaX == 0 && touchDeltaY == 0 {
             return
         }
-        var x, y, width, height: CGFloat!
-        if abs(deltaX) > abs(deltaY) {
-            deltaY = deltaX / self.frameRatio
+        var dx : CGFloat = 0
+        var dy : CGFloat = 0
+        var dwidth: CGFloat = 0
+        var dheight: CGFloat = 0
+        
+        if abs(touchDeltaX) > abs(touchDeltaY) {
+            touchDeltaY = touchDeltaX / self.frameRatio
             if changedEdge.contains(.left) {
                 if changedEdge.contains(.top) {
-                    y = deltaY
+                    dy = touchDeltaY
                 } else if changedEdge.contains(.bottom) {
-                    y = 0
+                    dy = 0
                 } else {
-                    y = deltaY / 2
+                    dy = touchDeltaY / 2
                 }
-                height = -deltaY
-                width = -deltaX
-                x = deltaX
+                dheight = -touchDeltaY
+                dwidth = -touchDeltaX
+                dx = touchDeltaX
             } else if changedEdge.contains(.right) {
                 if changedEdge.contains(.top) {
-                    y = -deltaY
+                    dy = -touchDeltaY
                 } else if changedEdge.contains(.bottom) {
-                    y = 0
+                    dy = 0
                 } else {
-                    y = -deltaY / 2
+                    dy = -touchDeltaY / 2
                 }
-                height = deltaY
-                width = deltaX
-                x = 0
+                dheight = touchDeltaY
+                dwidth = touchDeltaX
+                dx = 0
             }
         } else {
-            deltaX = deltaY * self.frameRatio
+            touchDeltaX = touchDeltaY * self.frameRatio
             if changedEdge.contains(.top) {
                 if changedEdge.contains(.left) {
-                    x = deltaX
+                    dx = touchDeltaX
                 } else if changedEdge.contains(.right) {
-                    x = 0
+                    dx = 0
                 } else {
-                    x = deltaX / 2
+                    dx = touchDeltaX / 2
                 }
-                width = -deltaX
-                height = -deltaY
-                y = deltaY
+                dwidth = -touchDeltaX
+                dheight = -touchDeltaY
+                dy = touchDeltaY
             } else if changedEdge.contains(.bottom) {
                 if changedEdge.contains(.left) {
-                    x = -deltaX
+                    dx = -touchDeltaX
                 } else if changedEdge.contains(.right) {
-                    x = 0
+                    dx = 0
                 } else {
-                    x = -deltaX / 2
+                    dx = -touchDeltaX / 2
                 }
-                width = deltaX
-                height = deltaY
-                y = 0
+                dwidth = touchDeltaX
+                dheight = touchDeltaY
+                dy = 0
             }
         }
-        var cropFrame = self.cropView.frame
-        cropFrame.size.width += width
-        cropFrame.origin.x += x
-        cropFrame.size.height += height
-        cropFrame.origin.y += y
-        
+        let frame = self.adjustFrame(self.cropView.frame, dx: dx, dy: dy, dwidth: dwidth, dheight: dheight)
+        self.adjustFixedCropFrameDeltas(frame, dx: &dx, dy: &dy, dwidth: &dwidth, dheight: &dheight)
+        let cropFrame = self.adjustFrame(self.cropView.frame, dx: dx, dy: dy, dwidth: dwidth, dheight: dheight)
         self.assignCropFrameRatio(cropFrame: cropFrame)
         self.firstTouchLocation = touchPoint
     }
     
+    private func adjustFrame(_ frame: CGRect, dx: CGFloat, dy: CGFloat, dwidth: CGFloat, dheight: CGFloat) -> CGRect {
+        var adjustedFrame = frame
+        adjustedFrame.size.width += dwidth
+        adjustedFrame.origin.x += dx
+        adjustedFrame.size.height += dheight
+        adjustedFrame.origin.y += dy
+        return adjustedFrame
+    }
+    
+    
+    private func adjustFixedCropFrameDeltas(_ fixedFrame: CGRect, dx: inout CGFloat, dy: inout CGFloat, dwidth: inout CGFloat, dheight: inout CGFloat) {
+        var frame = fixedFrame
+        if frame.minX < 0 {
+            let delta = -frame.minX
+            let decreasedRatio = 1 - abs(delta / dx)
+            dx = dx * decreasedRatio
+            dy = dy * decreasedRatio
+            dwidth = dwidth * decreasedRatio
+            dheight = dheight * decreasedRatio
+            frame = self.adjustFrame(self.cropView.frame, dx: dx, dy: dy, dwidth: dwidth, dheight: dheight)
+        }
+        if frame.maxX > self.frame.width {
+            let delta = frame.maxX - self.frame.width
+            let decreasedRatio = 1 - abs(delta / (frame.maxX - self.cropView.frame.maxX))
+            dx = dx * decreasedRatio
+            dy = dy * decreasedRatio
+            dwidth = dwidth * decreasedRatio
+            dheight = dheight * decreasedRatio
+            frame = self.adjustFrame(self.cropView.frame, dx: dx, dy: dy, dwidth: dwidth, dheight: dheight)
+        }
+        if frame.minY < 0 {
+            let delta = -frame.minY
+            let decreasedRatio = 1 - abs(delta / dy)
+            dx = dx * decreasedRatio
+            dy = dy * decreasedRatio
+            dwidth = dwidth * decreasedRatio
+            dheight = dheight * decreasedRatio
+            frame = self.adjustFrame(self.cropView.frame, dx: dx, dy: dy, dwidth: dwidth, dheight: dheight)
+        }
+        if frame.maxY > self.frame.height {
+            let delta = frame.maxY - self.frame.height
+            let decreasedRatio = 1 - abs(delta / (frame.maxY - self.cropView.frame.maxY))
+            dx = dx * decreasedRatio
+            dy = dy * decreasedRatio
+            dwidth = dwidth * decreasedRatio
+            dheight = dheight * decreasedRatio
+            frame = self.adjustFrame(self.cropView.frame, dx: dx, dy: dy, dwidth: dwidth, dheight: dheight)
+        }
+    }
+    
     private func refineFreeCropFrame(frame: CGRect) -> CGRect {
         var cropFrame = frame
-        if cropFrame.origin.x < 0 {
-            let delta = -cropFrame.origin.x
+        if cropFrame.minX < 0 {
+            let delta = -cropFrame.minX
             cropFrame.origin.x = 0
             cropFrame.size.width -= delta
         }
@@ -403,8 +454,8 @@ class CroppableImageView: UIImageView, Calibratable {
             let delta = cropFrame.maxX - self.frame.width
             cropFrame.size.width -= delta
         }
-        if cropFrame.origin.y < 0 {
-            let delta = -cropFrame.origin.y
+        if cropFrame.minY < 0 {
+            let delta = -cropFrame.minY
             cropFrame.origin.y = 0
             cropFrame.size.height -= delta
         }
