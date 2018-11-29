@@ -16,8 +16,11 @@ enum FixedRatioFrame : Int {
     case original
     case fitToScreen
     case square
-    case twoThree
-    case count
+    case twoThird
+    case threeFifth
+    case threeFourth
+    case fourFifth
+    case fiveSeventh
 }
 
 enum CropFrameAction : Int {
@@ -514,7 +517,11 @@ extension CroppableImageView {
     
     func resetState() {
         self.calibrateView()
-        assignCropFrameRatio(cropFrame: self.bounds)
+        if self.fixRatio == .none {
+            assignCropFrameRatio(cropFrame: self.bounds)
+        } else {
+            fixCropFrame(fixRatio: self.fixRatio)
+        }
     }
     
     func rotate() {
@@ -597,8 +604,18 @@ extension CroppableImageView {
             return image.size.width / image.size.height
         case .square:
             return 1.0
-        case .twoThree:
+        case .twoThird:
             return 2.0 / 3.0
+        case .fitToScreen:
+            return UIScreen.main.bounds.width / UIScreen.main.bounds.height
+        case .threeFifth:
+            return 3.0 / 5.0
+        case .threeFourth:
+            return 3.0 / 4.0
+        case .fourFifth:
+            return 4.0 / 5.0
+        case .fiveSeventh:
+            return 5.0 / 7.0
         default:
             return 0
         }

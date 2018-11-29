@@ -65,32 +65,53 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     func setupFrameActionSheet() {
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
             self.frameActionSheet.dismiss(animated: true, completion: nil)
-            self.customFrameButton.isHighlighted = false
         }
         self.frameActionSheet.addAction(cancel)
 
         let original = UIAlertAction(title: "Original", style: .default) { (action) in
-            self.fixCropFrame = .original
-            self.frameActionSheet.dismiss(animated: true, completion: nil)
+            self.selectFixRatio(.original)
         }
         self.frameActionSheet.addAction(original)
         
         let fitToScreen = UIAlertAction(title: "Fit to screen", style: .default) { (action) in
-            self.frameActionSheet.dismiss(animated: true, completion: nil)
+            self.selectFixRatio(.fitToScreen)
         }
         self.frameActionSheet.addAction(fitToScreen)
 
         let square = UIAlertAction(title: "Square", style: .default) { (action) in
-            self.frameActionSheet.dismiss(animated: true, completion: nil)
-            self.imageView.fixCropFrame(fixRatio: .square)
+            self.selectFixRatio(.square)
         }
         self.frameActionSheet.addAction(square)
         
-        let twoThree = UIAlertAction(title: "2:3", style: .default) { (action) in
-            self.frameActionSheet.dismiss(animated: true, completion: nil)
-            self.imageView.fixCropFrame(fixRatio: .twoThree)
+        let twoThird = UIAlertAction(title: "2:3", style: .default) { (action) in
+            self.selectFixRatio(.twoThird)
         }
-        self.frameActionSheet.addAction(twoThree)
+        self.frameActionSheet.addAction(twoThird)
+        
+        let threeFifth = UIAlertAction(title: "3:5", style: .default) { (action) in
+            self.selectFixRatio(.threeFifth)
+        }
+        self.frameActionSheet.addAction(threeFifth)
+        
+        let threeFourth = UIAlertAction(title: "3:4", style: .default) { (action) in
+            self.selectFixRatio(.threeFourth)
+        }
+        self.frameActionSheet.addAction(threeFourth)
+        
+        let fourFifth = UIAlertAction(title: "4:5", style: .default) { (action) in
+            self.selectFixRatio(.fourFifth)
+        }
+        self.frameActionSheet.addAction(fourFifth)
+        
+        let fiveSeventh = UIAlertAction(title: "5:7", style: .default) { (action) in
+            self.selectFixRatio(.fiveSeventh)
+        }
+        self.frameActionSheet.addAction(fiveSeventh)
+    }
+    
+    private func selectFixRatio(_ fixRatio: FixedRatioFrame) {
+        self.imageView.fixCropFrame(fixRatio: fixRatio)
+        self.frameActionSheet.dismiss(animated: true, completion: nil)
     }
     
     @objc func zoomImage() {
@@ -136,7 +157,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
             self.customFrameButton.isHighlighted = false
         } else {
             self.customFrameButton.isHighlighted = true
-            self.present(self.frameActionSheet, animated: false, completion: nil)
+            self.present(self.frameActionSheet, animated: true, completion: nil)
         }
     }
 
