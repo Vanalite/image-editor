@@ -13,15 +13,15 @@ struct LineDrawCommand : DrawCommand {
     
     let width: CGFloat
     let color: UIColor
-
+    
     // MARK: DrawCommand
     
     func execute(canvas: Canvas) {
         self.configure(canvas: canvas)
-
+        
         if self.points.count == 3 {
             self.drawQuadCurve(canvas: canvas)
-        } else if self.points.count >= 3 {
+        } else if self.points.count > 3 {
             self.drawCurve(canvas: canvas)
         } else {
             self.drawLine(canvas: canvas)

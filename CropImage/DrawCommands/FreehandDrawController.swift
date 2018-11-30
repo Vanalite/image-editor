@@ -22,7 +22,7 @@ class FreehandDrawController : NSObject {
     // MARK: API
     
     func undo() {
-        if self.commandQueue.count > 0{
+        if self.commandQueue.count > 0 {
             self.commandQueue.removeLast()
             self.canvas.reset()
             self.canvas.executeCommands(commands: self.commandQueue)
@@ -125,7 +125,7 @@ class FreehandDrawController : NSObject {
         if let lineStrokeCommand = self.lineStrokeCommand {
             self.commandQueue.append(lineStrokeCommand)
         }
-
+        
         self.lineStrokeCommand = nil
     }
     
@@ -143,7 +143,7 @@ class FreehandDrawController : NSObject {
     }
     
     private func tapAtPoint(point: CGPoint) {
-        let circleCommand = CircleDrawCommand(center: point, radius: self.width/2.0, color: self.color)
+        let circleCommand = CircleDrawCommand(center: point, radius: self.width / 2.0, color: self.color)
         self.canvas.executeCommands(commands:[circleCommand])
         self.commandQueue.append(circleCommand)
     }
@@ -151,7 +151,6 @@ class FreehandDrawController : NSObject {
     private func midPoint(a: CGPoint, b: CGPoint) -> CGPoint {
         return CGPoint(x: (a.x + b.x) / 2, y: (a.y + b.y) / 2)
     }
-
     
     private let canvas: Canvas & DrawCommandReceiver
     private var lineStrokeCommand: ComposedCommand?

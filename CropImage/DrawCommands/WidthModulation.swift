@@ -22,7 +22,7 @@ func modulatedWidth(width: CGFloat, velocity: CGPoint, previousVelocity: CGPoint
 
 extension CGPoint {
     func length() -> CGFloat {
-        return sqrt((self.x*self.x) + (self.y*self.y))
+        return sqrt((self.x * self.x) + (self.y * self.y))
     }
 }
 
