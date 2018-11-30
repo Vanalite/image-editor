@@ -13,6 +13,9 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var customFrameButton: UIButton!
+    
+    let icRatioImgName = "icRatio"
+    let icRatioSelectedImgName = "icRatioSelected"
     let frameActionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
     
     @objc public var image: UIImage! {
@@ -22,7 +25,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     var originalImage: UIImage?
     let imageView = CroppableImageView()
-    var fixCropFrame = FixedRatioFrame.none;
+    var fixedRatioFrame = FixedRatioFrame.none;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,10 +36,6 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.imageView.image = self.image
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         self.imageView.resetState()
     }
     
@@ -110,6 +109,8 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func selectFixRatio(_ fixRatio: FixedRatioFrame) {
+        self.fixedRatioFrame = fixRatio
+        self.customFrameButton.setImage(UIImage(named: icRatioSelectedImgName), for: .normal)
         self.imageView.fixCropFrame(fixRatio: fixRatio)
         self.frameActionSheet.dismiss(animated: true, completion: nil)
     }
@@ -148,12 +149,12 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func customFrameButtonTouched(_ sender: Any) {
-        if (self.fixCropFrame != .none) {
-            self.fixCropFrame = .none
-            self.customFrameButton.isHighlighted = false
-        } else {
-            self.customFrameButton.isHighlighted = true
+        if (self.fixedRatioFrame == .none) {
             self.present(self.frameActionSheet, animated: true, completion: nil)
+        } else {
+            self.customFrameButton.setImage(UIImage(named: icRatioImgName), for: .normal)
+            self.fixedRatioFrame = .none
+            self.imageView.fixCropFrame(fixRatio: .none)
         }
     }
 
