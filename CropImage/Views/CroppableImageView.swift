@@ -51,16 +51,38 @@ class CroppableImageView: UIImageView, Calibratable {
     init() {
         super.init(frame: .zero)
         self.setupUI()
-        self.setupGesture()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func handlePanMove(sender: UIPanGestureRecognizer) {
+        let locationPoint = sender.location(in: self)
+        switch sender.state {
+        case .began:
+            self.assignActionForCropFrame(withPoint: locationPoint)
+        case .changed:
+            switch self.cropAction {
+            case .Move:
+                let translatedPoint = sender.translation(in: self)
+                self.moveCropFrame(touchedPoint: translatedPoint)
+            case .Resize:
+                self.resizeCropFrame(touchedPoint: locationPoint)
+            case .None:
+                break
+            }
+        case .ended:
+            self.cropAction = .None
+        default:
+            break
+        }
+        sender.setTranslation(.zero, in:self)
+    }
+    
+    // MARK: Private Methods
     private func setupUI() {
         self.setupCropView()
-        self.setupGesture()
     }
     
     private func setupCropView() {
@@ -188,39 +210,6 @@ class CroppableImageView: UIImageView, Calibratable {
         self.horizontalGridView.centerYAnchor.constraint(equalTo: self.cropView.centerYAnchor).isActive = true
         self.horizontalGridView.heightAnchor.constraint(equalTo: self.cropView.heightAnchor, multiplier: 1/3).isActive = true
         self.horizontalGridView.widthAnchor.constraint(equalTo: self.cropView.widthAnchor).isActive = true
-    }
-    
-    private func setupGesture() {
-        let panRecognizer = UIPanGestureRecognizer(target:self, action:#selector(self.handlePanMove(sender:)))
-        panRecognizer.minimumNumberOfTouches = 1
-        panRecognizer.maximumNumberOfTouches = 1
-        self.addGestureRecognizer(panRecognizer)
-    }
-    
-    // MARK: Private Methods
-    @objc private func handlePanMove(sender: UIPanGestureRecognizer) {
-        guard let senderView = sender.view else { return }
-        let locationPoint = sender.location(in: senderView)
-        switch sender.state {
-        case .began:
-            self.assignActionForCropFrame(withPoint: locationPoint)
-        case .changed:
-            switch self.cropAction {
-            case .Move:
-                let translatedPoint = sender.translation(in: senderView)
-                self.moveCropFrame(touchedPoint: translatedPoint)
-            case .Resize:
-                self.resizeCropFrame(touchedPoint: locationPoint)
-            case .None:
-                break
-            }
-        case .ended:
-            self.cropAction = .None
-            
-        default:
-            break
-        }
-        sender.setTranslation(.zero, in:senderView)
     }
     
     private func assignActionForCropFrame(withPoint point: CGPoint) {

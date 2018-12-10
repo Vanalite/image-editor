@@ -17,6 +17,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     let icRatioImgName = "icRatio"
     let icRatioSelectedImgName = "icRatioSelected"
     let frameActionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    let touchInset: CGFloat = 30
     
     @objc public var image: UIImage! {
         didSet {
@@ -38,11 +39,28 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.imageView.image = self.image
         self.imageView.resetState()
     }
+
+    private func setupGesture() {
+        let panRecognizer = UIPanGestureRecognizer(target:self, action:#selector(self.handlePanMove(sender:)))
+        panRecognizer.minimumNumberOfTouches = 1
+        panRecognizer.maximumNumberOfTouches = 1
+        self.imageContainerView.addGestureRecognizer(panRecognizer)
+    }
+    
+    @objc private func handlePanMove(sender: UIPanGestureRecognizer) {
+        let frame = self.imageView.frame.insetBy(dx: -touchInset, dy: -touchInset)
+        let locationInContainerPoint = sender.location(in: self.imageContainerView)
+        if sender.state == .began && !frame.contains(locationInContainerPoint) {
+            return
+        }
+        self.imageView.handlePanMove(sender: sender)
+    }
     
     func setupUI() {
         self.automaticallyAdjustsScrollViewInsets = false
         self.setupScrollView()
         self.setupImageView()
+        self.setupGesture()
         self.setupFrameActionSheet()
     }
     
@@ -57,7 +75,10 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     func setupImageView() {
         self.imageView.contentMode = .scaleAspectFit
         self.imageView.isUserInteractionEnabled = true
-        self.imageContainerView.addSubview(self.imageView)
+        let imageContentView = UIView(frame: CGRect(origin: .zero, size: self.imageContainerView.frame.size))
+        imageContentView.frame = imageContentView.frame.insetBy(dx: 10, dy: 10)
+        imageContentView.addSubview(self.imageView)
+        self.imageContainerView.addSubview(imageContentView)
         self.view.sendSubview(toBack: self.imageContainerView)
     }
     
