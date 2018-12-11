@@ -28,15 +28,27 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     var originalImage: UIImage?
     let imageView = CroppableImageView()
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.originalImage = self.image
         self.setupUI()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+    }
+    
+    @objc private func rotated() {
+        self.imageView.resetState()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.imageView.image = self.image
+    }
+    
+    override func viewDidLayoutSubviews() {
         self.imageView.resetState()
     }
     
@@ -73,58 +85,62 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     private func setupImageView() {
+        let imageContentView = UIView()
+        imageContentView.translatesAutoresizingMaskIntoConstraints = false
+        self.imageContainerView.addSubview(imageContentView)
+        imageContentView.leadingAnchor.constraint(equalTo: self.imageContainerView.leadingAnchor, constant: 10).isActive = true
+        imageContentView.trailingAnchor.constraint(equalTo: self.imageContainerView.trailingAnchor, constant: -10).isActive = true
+        imageContentView.topAnchor.constraint(equalTo: self.imageContainerView.topAnchor, constant: 10).isActive = true
+        imageContentView.bottomAnchor.constraint(equalTo: self.imageContainerView.bottomAnchor, constant: -10).isActive = true
         self.imageView.contentMode = .scaleAspectFit
         self.imageView.isUserInteractionEnabled = true
-        let imageContentView = UIView(frame: CGRect(origin: .zero, size: self.imageContainerView.frame.size))
-        imageContentView.frame = imageContentView.frame.insetBy(dx: 10, dy: 10)
         imageContentView.addSubview(self.imageView)
-        self.imageContainerView.addSubview(imageContentView)
         self.view.sendSubview(toBack: self.imageContainerView)
     }
     
     private func setupFrameActionSheet() {
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
-            self.frameActionSheet.dismiss(animated: true, completion: nil)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] (action) in
+            self?.frameActionSheet.dismiss(animated: true, completion: nil)
         }
         self.frameActionSheet.addAction(cancel)
         
-        let original = UIAlertAction(title: "Original", style: .default) { (action) in
-            self.selectFixRatio(.original)
+        let original = UIAlertAction(title: "Original", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.original)
         }
         self.frameActionSheet.addAction(original)
         
-        let fitToScreen = UIAlertAction(title: "Fit to screen", style: .default) { (action) in
-            self.selectFixRatio(.fitToScreen)
+        let fitToScreen = UIAlertAction(title: "Fit to screen", style: .default) { [weak self]  (action) in
+            self?.selectFixRatio(.fitToScreen)
         }
         self.frameActionSheet.addAction(fitToScreen)
         
-        let square = UIAlertAction(title: "Square", style: .default) { (action) in
-            self.selectFixRatio(.square)
+        let square = UIAlertAction(title: "Square", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.square)
         }
         self.frameActionSheet.addAction(square)
         
-        let twoThird = UIAlertAction(title: "2:3", style: .default) { (action) in
-            self.selectFixRatio(.twoThird)
+        let twoThird = UIAlertAction(title: "2:3", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.twoThird)
         }
         self.frameActionSheet.addAction(twoThird)
         
-        let threeFifth = UIAlertAction(title: "3:5", style: .default) { (action) in
-            self.selectFixRatio(.threeFifth)
+        let threeFifth = UIAlertAction(title: "3:5", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.threeFifth)
         }
         self.frameActionSheet.addAction(threeFifth)
         
-        let threeFourth = UIAlertAction(title: "3:4", style: .default) { (action) in
-            self.selectFixRatio(.threeFourth)
+        let threeFourth = UIAlertAction(title: "3:4", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.threeFourth)
         }
         self.frameActionSheet.addAction(threeFourth)
         
-        let fourFifth = UIAlertAction(title: "4:5", style: .default) { (action) in
-            self.selectFixRatio(.fourFifth)
+        let fourFifth = UIAlertAction(title: "4:5", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.fourFifth)
         }
         self.frameActionSheet.addAction(fourFifth)
         
-        let fiveSeventh = UIAlertAction(title: "5:7", style: .default) { (action) in
-            self.selectFixRatio(.fiveSeventh)
+        let fiveSeventh = UIAlertAction(title: "5:7", style: .default) { [weak self] (action) in
+            self?.selectFixRatio(.fiveSeventh)
         }
         self.frameActionSheet.addAction(fiveSeventh)
     }

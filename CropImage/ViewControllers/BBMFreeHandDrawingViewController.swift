@@ -23,14 +23,20 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     
     @objc public var image: UIImage! {
         didSet {
-            self.imageView.image = image
             self.imageView.originalImage = image
+            if let cgImage = image.cgImage?.copy() {
+                let newImage = UIImage(cgImage: cgImage, scale: image.scale, orientation: image.imageOrientation)
+                self.imageView.image = newImage
+            }
         }
     }
-    var originalImage: UIImage?
     let imageView = DrawableImageView()
     private var drawController: FreehandDrawController!
     let colorArray: [UIColor] = [.black, .red, .blue, .green, .yellow, .cyan, .magenta, .orange, .purple, .brown, .gray]
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
@@ -44,16 +50,19 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.originalImage = self.image
         self.drawController = FreehandDrawController(canvas: self.imageView, view: self.imageView)
         self.drawController.color = self.colorArray.first!
         self.setupUI()
         self.selectedColorButton.backgroundColor = self.drawController.color
+        NotificationCenter.default.addObserver(self, selector: #selector(self.rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.imageView.image = self.image
+    @objc private func rotated() {
+        self.imageView.calibrateView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        self.imageView.calibrateView()
     }
     
     fileprivate func showControls() {
@@ -98,13 +107,21 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
         }
     }
     
+    @IBAction func cancelButtonTouched(_ sender: Any) {
+        if let image = self.imageView.originalImage {
+            self.delegate?.didFinishEditingImage(image)
+        }
+        self.dismiss()
+    }
+    
     @IBAction func undoButtonTouched(_ sender: Any) {
         self.drawController.undo()
     }
     
     @IBAction func saveButtonTouched(_ sender: Any) {
-        self.image = self.imageView.image
-        self.delegate?.didFinishEditingImage(self.image)
+        if let image = self.imageView.image {
+            self.delegate?.didFinishEditingImage(image)
+        }
         self.dismiss()
     }
     
