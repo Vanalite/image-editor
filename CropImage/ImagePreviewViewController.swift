@@ -35,13 +35,21 @@ class ImagePreviewViewController: UIViewController {
         if segue.identifier! ==  "freeHandSegue" {
             if let vc = segue.destination as? BBMFreeHandDrawingViewController {
                 vc.image = self.image
+                vc.delegate = self
             }
         } else {
             if let vc: BBMCropRotateImageViewController = segue.destination as? BBMCropRotateImageViewController {
                 vc.image = self.image
+                vc.delegate = self
             }
 
         }
     }
     
+}
+
+extension ImagePreviewViewController: ImageEditorDelegate {
+    func didFinishEditingImage(_ image: UIImage) {
+        self.image = image
+    }
 }

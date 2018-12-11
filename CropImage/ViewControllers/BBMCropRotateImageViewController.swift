@@ -10,6 +10,7 @@ import UIKit
 
 class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     
+    @objc weak var delegate : ImageEditorDelegate? = nil
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var customFrameButton: UIButton!
@@ -26,7 +27,6 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     var originalImage: UIImage?
     let imageView = CroppableImageView()
-    var fixedRatioFrame = FixedRatioFrame.none;
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +39,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.imageView.image = self.image
         self.imageView.resetState()
     }
-
+    
     private func setupGesture() {
         let panRecognizer = UIPanGestureRecognizer(target:self, action:#selector(self.handlePanMove(sender:)))
         panRecognizer.minimumNumberOfTouches = 1
@@ -56,7 +56,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.imageView.handlePanMove(sender: sender)
     }
     
-    func setupUI() {
+    private func setupUI() {
         self.automaticallyAdjustsScrollViewInsets = false
         self.setupScrollView()
         self.setupImageView()
@@ -64,7 +64,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.setupFrameActionSheet()
     }
     
-    func setupScrollView() {
+    private func setupScrollView() {
         self.scrollView.delegate = self
         self.scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.scrollView.isUserInteractionEnabled = false
@@ -72,7 +72,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.scrollView.isHidden = true
     }
     
-    func setupImageView() {
+    private func setupImageView() {
         self.imageView.contentMode = .scaleAspectFit
         self.imageView.isUserInteractionEnabled = true
         let imageContentView = UIView(frame: CGRect(origin: .zero, size: self.imageContainerView.frame.size))
@@ -82,12 +82,12 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.view.sendSubview(toBack: self.imageContainerView)
     }
     
-    func setupFrameActionSheet() {
+    private func setupFrameActionSheet() {
         let cancel = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
             self.frameActionSheet.dismiss(animated: true, completion: nil)
         }
         self.frameActionSheet.addAction(cancel)
-
+        
         let original = UIAlertAction(title: "Original", style: .default) { (action) in
             self.selectFixRatio(.original)
         }
@@ -97,7 +97,7 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
             self.selectFixRatio(.fitToScreen)
         }
         self.frameActionSheet.addAction(fitToScreen)
-
+        
         let square = UIAlertAction(title: "Square", style: .default) { (action) in
             self.selectFixRatio(.square)
         }
@@ -129,11 +129,23 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
         self.frameActionSheet.addAction(fiveSeventh)
     }
     
+    private func switchToNoneFixedRatio() {
+        self.customFrameButton.setImage(UIImage(named: icRatioImgName), for: .normal)
+        self.imageView.fixCropFrame(fixRatio: .none)
+    }
+    
     private func selectFixRatio(_ fixRatio: FixedRatioFrame) {
-        self.fixedRatioFrame = fixRatio
         self.customFrameButton.setImage(UIImage(named: icRatioSelectedImgName), for: .normal)
         self.imageView.fixCropFrame(fixRatio: fixRatio)
         self.frameActionSheet.dismiss(animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func zoomImage() {
@@ -152,40 +164,28 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     @IBAction func doneButtonTouched(_ sender: Any) {
         self.imageView.cropImage()
         self.image = self.imageView.image
-        if let vc = self.navigationController?.viewControllers.first as? ImagePreviewViewController {
-            vc.image = self.image
-        }
-        self.navigationController?.popViewController(animated: true)
+        self.delegate?.didFinishEditingImage(self.image)
+        self.dismiss()
     }
     
     @IBAction func resetButtonTouched(_ sender: Any) {
         self.image = self.originalImage
+        switchToNoneFixedRatio()
         self.imageView.resetState()
-        self.imageView.showGridView()
     }
     
     @IBAction func cancelButtonTouched(_ sender: Any) {
         self.dismiss()
     }
     
-    private func dismiss() {
-        if let navigationController = self.navigationController {
-            navigationController.popViewController(animated: true)
+    @IBAction func customFrameButtonTouched(_ sender: Any) {
+        if (self.imageView.fixRatio == .none) {
+            self.present(self.frameActionSheet, animated: true, completion: nil)
         } else {
-            self.dismiss(animated: true, completion: nil)
+            switchToNoneFixedRatio()
         }
     }
     
-    @IBAction func customFrameButtonTouched(_ sender: Any) {
-        if (self.fixedRatioFrame == .none) {
-            self.present(self.frameActionSheet, animated: true, completion: nil)
-        } else {
-            self.customFrameButton.setImage(UIImage(named: icRatioImgName), for: .normal)
-            self.fixedRatioFrame = .none
-            self.imageView.fixCropFrame(fixRatio: .none)
-        }
-    }
-
 }
 
 extension BBMCropRotateImageViewController {

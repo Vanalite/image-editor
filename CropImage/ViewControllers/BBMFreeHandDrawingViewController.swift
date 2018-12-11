@@ -8,8 +8,13 @@
 
 import UIKit
 
+@objc public protocol ImageEditorDelegate {
+    func didFinishEditingImage(_ image: UIImage)
+}
+
 class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    @objc weak var delegate : ImageEditorDelegate? = nil
     @IBOutlet weak var colorPickerCollectionView: UICollectionView!
     @IBOutlet weak var imageContainerView: UIView!
     @IBOutlet weak var selectedColorButton: UIButton!
@@ -29,7 +34,7 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-         self.hideControls()
+        self.hideControls()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -72,7 +77,7 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
         self.setupImageView()
         self.setupBrushWidthSlider()
     }
-
+    
     fileprivate func setupImageView() {
         self.imageView.contentMode = .scaleAspectFit
         self.imageView.isUserInteractionEnabled = true
@@ -85,21 +90,28 @@ class BBMFreeHandDrawingViewController: UIViewController, UICollectionViewDelega
         self.brushWidthSlider.value = Float(self.drawController.width)
     }
     
+    fileprivate func dismiss() {
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     @IBAction func undoButtonTouched(_ sender: Any) {
         self.drawController.undo()
     }
     
     @IBAction func saveButtonTouched(_ sender: Any) {
         self.image = self.imageView.image
-        if let vc = self.navigationController?.viewControllers.first as? ImagePreviewViewController {
-            vc.image = self.image
-        }
-        self.navigationController?.popViewController(animated: true)
+        self.delegate?.didFinishEditingImage(self.image)
+        self.dismiss()
     }
     
     @objc func sliderChanged() {
         self.drawController.width = CGFloat(self.brushWidthSlider.value)
     }
+    
 }
 
 extension BBMFreeHandDrawingViewController {
