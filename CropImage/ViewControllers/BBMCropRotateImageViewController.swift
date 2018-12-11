@@ -165,8 +165,15 @@ class BBMCropRotateImageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func cancelButtonTouched(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
-        self.imageView.hideGridView()
+        self.dismiss()
+    }
+    
+    private func dismiss() {
+        if let navigationController = self.navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @IBAction func customFrameButtonTouched(_ sender: Any) {
